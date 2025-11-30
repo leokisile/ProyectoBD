@@ -35,13 +35,13 @@ CREATE TABLE personas(
 
 CREATE TABLE redes(
 	idRed int auto_increment primary key,
-    red varchar(40)
+    red varchar(40) UNIQUE
 );
 
 CREATE TABLE redesPersonas(
 	idPersona int not null,
     idRed int not null,
-    enlace varchar(30),
+    enlace varchar(100) UNIQUE,
     PRIMARY KEY(idPersona, idRed),
     FOREIGN KEY (idPersona) REFERENCES personas(idPersona) 
     ON DELETE CASCADE ON UPDATE CASCADE,
@@ -91,7 +91,7 @@ CREATE TABLE eventoHorario(
 
 CREATE TABLE roles(
 	idRol int auto_increment primary key,
-    rol varchar(50)
+    rol varchar(50) UNIQUE
 );
 
 CREATE TABLE relPersonaEvento(

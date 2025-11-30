@@ -4,12 +4,12 @@ USE feriaLibro;
 
 CREATE TABLE organizaciones(
 	idOrganizacion int auto_increment primary key,
-    nombre varchar(60) not null,
-    tel varchar(12) not null,
-    correo varchar(40) not null,
-    pagina varchar(40) default null,
+    nombre varchar(100) not null,
+    tel varchar(20) not null,
+    correo varchar(100) not null,
+    pagina varchar(100) default null,
     pais varchar(30) not null,
-    estado varchar(20) not null,
+    estado varchar(40) not null,
     ciudad varchar(30) default null
 );
 
@@ -20,8 +20,8 @@ CREATE TABLE espacios(
 
 CREATE TABLE sedes(
 	idSede int auto_increment primary key,
-    nombre varchar(30) not null,
-    ubicacion varchar(60) not null,
+    nombre varchar(40) not null,
+    ubicacion varchar(100) not null,
     idEspacio int not null,
     FOREIGN KEY (idEspacio) REFERENCES espacios(idEspacio)
     ON DELETE CASCADE ON UPDATE CASCADE
@@ -29,13 +29,13 @@ CREATE TABLE sedes(
 
 CREATE TABLE personas(
 	idPersona int auto_increment primary key,
-    nombre varchar(60) not null,
+    nombre varchar(100) not null,
     biografia text default null
 );
 
 CREATE TABLE redes(
 	idRed int auto_increment primary key,
-    red varchar(20)
+    red varchar(40)
 );
 
 CREATE TABLE redesPersonas(
@@ -51,7 +51,7 @@ CREATE TABLE redesPersonas(
 
 CREATE TABLE tipoEventos(
 	idTipoEvento int auto_increment primary key,
-    tipoEvento varchar(20)
+    tipoEvento varchar(60)
 );
 
 CREATE TABLE eventos(
@@ -91,7 +91,7 @@ CREATE TABLE eventoHorario(
 
 CREATE TABLE roles(
 	idRol int auto_increment primary key,
-    rol varchar(20)
+    rol varchar(50)
 );
 
 CREATE TABLE relPersonaEvento(

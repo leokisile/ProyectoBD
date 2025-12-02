@@ -1,0 +1,27 @@
+{
+  "name": "proyecto-bd",
+  "version": "1.0.0",
+  "description": "Base de Datos basada en la Feria de Libro de León, Guanajuato",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/leokisile/ProyectoBD.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/leokisile/ProyectoBD/issues"
+  },
+  "homepage": "https://github.com/leokisile/ProyectoBD#readme",
+  "dependencies": {
+    "body-parser": "^2.2.1",
+    "cors": "^2.8.5",
+    "express": "^5.2.1",
+    "mysql2": "^3.15.3"
+  }
+}

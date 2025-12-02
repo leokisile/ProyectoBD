@@ -55,6 +55,24 @@ DROP TRIGGER IF EXISTS trg_horPersonaTraslape;
 DROP TRIGGER IF EXISTS trg_horPersonaTraslape_upd;
 DROP PROCEDURE IF EXISTS crearOrganizacion;
 DROP PROCEDURE IF EXISTS modificarOrganizacion;
+DROP PROCEDURE IF EXISTS eliminarOrganizacion;
+DROP PROCEDURE IF EXISTS eliminarEspacio;
+DROP PROCEDURE IF EXISTS eliminarSede;
+DROP PROCEDURE IF EXISTS eliminarPersona;
+DROP PROCEDURE IF EXISTS eliminarRed;
+DROP PROCEDURE IF EXISTS eliminarRedPersona;
+DROP PROCEDURE IF EXISTS eliminarTipoEvento;
+DROP PROCEDURE IF EXISTS eliminarEvento;
+DROP PROCEDURE IF EXISTS eliminarRelEventoOrg;
+DROP PROCEDURE IF EXISTS eliminarHorarioEvento;
+DROP PROCEDURE IF EXISTS eliminarRol;
+DROP PROCEDURE IF EXISTS eliminarRelPersonaEvento;
+DROP PROCEDURE IF EXISTS eliminarLibro;
+DROP PROCEDURE IF EXISTS eliminarPresEditorial;
+DROP PROCEDURE IF EXISTS eliminarRelLibroPres;
+DROP PROCEDURE IF EXISTS eliminarEventoMusical;
+DROP PROCEDURE IF EXISTS eliminarTaller;
+DROP PROCEDURE IF EXISTS eliminarPremiacion;
 DROP PROCEDURE IF EXISTS crearEspacio;
 DROP PROCEDURE IF EXISTS modificarEspacio;
 DROP PROCEDURE IF EXISTS crearSede;
@@ -347,6 +365,27 @@ modi: BEGIN
     SET xMsg = 'ÉXITO: Organización modificada correctamente';
 END modi//
 
+CREATE PROCEDURE eliminarOrganizacion(
+    IN xidOrganizacion INT,
+    OUT xMsg VARCHAR(200)
+)
+del: BEGIN
+    IF xidOrganizacion IS NULL OR xidOrganizacion <= 0 THEN
+        SET xMsg = 'ERROR: El idOrganizacion no es válido';
+        LEAVE del;
+    END IF;
+
+    IF NOT EXISTS(SELECT 1 FROM organizaciones WHERE idOrganizacion = xidOrganizacion) THEN
+        SET xMsg = 'ERROR: La organización no existe';
+        LEAVE del;
+    END IF;
+
+    DELETE FROM organizaciones WHERE idOrganizacion = xidOrganizacion;
+
+    SET xMsg = 'ÉXITO: Organización eliminada';
+END del//
+
+
 CREATE PROCEDURE crearEspacio(
     IN xtipoEspacio VARCHAR(60),
     OUT xMsg VARCHAR(200)
@@ -396,6 +435,27 @@ modi: BEGIN
 
     SET xMsg = 'ÉXITO: Espacio modificado correctamente';
 END modi//
+
+CREATE PROCEDURE eliminarEspacio(
+    IN xidEspacio INT,
+    OUT xMsg VARCHAR(200)
+)
+del: BEGIN
+    IF xidEspacio IS NULL OR xidEspacio <= 0 THEN
+        SET xMsg = 'ERROR: El idEspacio no es válido';
+        LEAVE del;
+    END IF;
+
+    IF NOT EXISTS(SELECT 1 FROM espacios WHERE idEspacio = xidEspacio) THEN
+        SET xMsg = 'ERROR: El espacio no existe';
+        LEAVE del;
+    END IF;
+
+    DELETE FROM espacios WHERE idEspacio = xidEspacio;
+
+    SET xMsg = 'ÉXITO: Espacio eliminado';
+END del;
+
 
 CREATE PROCEDURE crearSede(
     IN xnombre VARCHAR(40),
@@ -485,6 +545,26 @@ modi: BEGIN
     SET xMsg = 'ÉXITO: Sede modificada correctamente';
 END modi//
 
+CREATE PROCEDURE eliminarSede(
+    IN xidSede INT,
+    OUT xMsg VARCHAR(200)
+)
+del: BEGIN
+    IF xidSede IS NULL OR xidSede <= 0 THEN
+        SET xMsg = 'ERROR: El idSede no es válido';
+        LEAVE del;
+    END IF;
+
+    IF NOT EXISTS(SELECT 1 FROM sedes WHERE idSede = xidSede) THEN
+        SET xMsg = 'ERROR: La sede no existe';
+        LEAVE del;
+    END IF;
+
+    DELETE FROM sedes WHERE idSede = xidSede;
+
+    SET xMsg = 'ÉXITO: Sede eliminada';
+END del;
+
 CREATE PROCEDURE crearPersona(
     IN xnombre VARCHAR(100),
     IN xbio TEXT,
@@ -529,6 +609,26 @@ modi: BEGIN
 
     SET xMsg = 'ÉXITO: Persona modificada correctamente';
 END modi//
+
+CREATE PROCEDURE eliminarPersona(
+    IN xidPersona INT,
+    OUT xMsg VARCHAR(200)
+)
+del: BEGIN
+    IF xidPersona IS NULL OR xidPersona <= 0 THEN
+        SET xMsg = 'ERROR: El idPersona no es válido';
+        LEAVE del;
+    END IF;
+
+    IF NOT EXISTS(SELECT 1 FROM personas WHERE idPersona = xidPersona) THEN
+        SET xMsg = 'ERROR: La persona no existe';
+        LEAVE del;
+    END IF;
+
+    DELETE FROM personas WHERE idPersona = xidPersona;
+
+    SET xMsg = 'ÉXITO: Persona eliminada';
+END del;
 
 CREATE PROCEDURE crearRed(
     IN xred VARCHAR(40),
@@ -586,6 +686,26 @@ modi: BEGIN
 
     SET xMsg = 'ÉXITO: Red actualizada correctamente';
 END modi//
+
+CREATE PROCEDURE eliminarRed(
+    IN xidRed INT,
+    OUT xMsg VARCHAR(200)
+)
+del: BEGIN
+    IF xidRed IS NULL OR xidRed <= 0 THEN
+        SET xMsg = 'ERROR: El idRed no es válido';
+        LEAVE del;
+    END IF;
+
+    IF NOT EXISTS(SELECT 1 FROM redes WHERE idRed = xidRed) THEN
+        SET xMsg = 'ERROR: La red no existe';
+        LEAVE del;
+    END IF;
+
+    DELETE FROM redes WHERE idRed = xidRed;
+
+    SET xMsg = 'ÉXITO: Red eliminada';
+END del;
 
 CREATE PROCEDURE crearRedPersona(
     IN xidPersona INT,
@@ -693,6 +813,36 @@ modi: BEGIN
     SET xMsg = 'ÉXITO: Relación persona-red modificada correctamente';
 END modi //
 
+CREATE PROCEDURE eliminarRedPersona(
+    IN xidPersona INT,
+    IN xidRed INT,
+    OUT xMsg VARCHAR(200)
+)
+del: BEGIN
+    IF xidPersona IS NULL OR xidPersona <= 0 THEN
+        SET xMsg = 'ERROR: idPersona inválido';
+        LEAVE del;
+    END IF;
+
+    IF xidRed IS NULL OR xidRed <= 0 THEN
+        SET xMsg = 'ERROR: idRed inválido';
+        LEAVE del;
+    END IF;
+
+    IF NOT EXISTS(
+        SELECT 1 FROM redesPersonas
+        WHERE idPersona = xidPersona AND idRed = xidRed
+    ) THEN
+        SET xMsg = 'ERROR: La relación persona-red no existe';
+        LEAVE del;
+    END IF;
+
+    DELETE FROM redesPersonas
+    WHERE idPersona = xidPersona AND idRed = xidRed;
+
+    SET xMsg = 'ÉXITO: Relación persona-red eliminada';
+END del;
+
 CREATE PROCEDURE crearTipoEvento(
     IN xtipoEvento VARCHAR(60),
     OUT xMsg VARCHAR(200)
@@ -746,6 +896,26 @@ modi: BEGIN
     SET xMsg = 'Éxito: Tipo de evento modificado correctamente';
 
 END modi //
+
+CREATE PROCEDURE eliminarTipoEvento(
+    IN xidTipoEvento INT,
+    OUT xMsg VARCHAR(200)
+)
+del: BEGIN
+    IF xidTipoEvento IS NULL OR xidTipoEvento <= 0 THEN
+        SET xMsg = 'ERROR: El idTipoEvento no es válido';
+        LEAVE del;
+    END IF;
+
+    IF NOT EXISTS(SELECT 1 FROM tipoEventos WHERE idTipoEvento = xidTipoEvento) THEN
+        SET xMsg = 'ERROR: El tipo de evento no existe';
+        LEAVE del;
+    END IF;
+
+    DELETE FROM tipoEventos WHERE idTipoEvento = xidTipoEvento;
+
+    SET xMsg = 'ÉXITO: Tipo de evento eliminado';
+END del;
 
 CREATE PROCEDURE crearEvento(
     IN xtitulo VARCHAR(30),
@@ -874,6 +1044,26 @@ modi: BEGIN
 
 END modi //
 
+CREATE PROCEDURE eliminarEvento(
+    IN xidEvento INT,
+    OUT xMsg VARCHAR(200)
+)
+del: BEGIN
+    IF xidEvento IS NULL OR xidEvento <= 0 THEN
+        SET xMsg = 'ERROR: El idEvento no es válido';
+        LEAVE del;
+    END IF;
+
+    IF NOT EXISTS(SELECT 1 FROM eventos WHERE idEvento = xidEvento) THEN
+        SET xMsg = 'ERROR: El evento no existe';
+        LEAVE del;
+    END IF;
+
+    DELETE FROM eventos WHERE idEvento = xidEvento;
+
+    SET xMsg = 'ÉXITO: Evento eliminado';
+END del;
+
 CREATE PROCEDURE crearRelEventoOrg(
     IN xidEvento INT,
     IN xidOrganizacion INT,
@@ -955,6 +1145,36 @@ modi: BEGIN
 
 END modi //
 
+CREATE PROCEDURE eliminarRelEventoOrg(
+    IN xidEvento INT,
+    IN xidOrganizacion INT,
+    OUT xMsg VARCHAR(200)
+)
+del: BEGIN
+    IF xidEvento IS NULL OR xidEvento <= 0 THEN
+        SET xMsg = 'ERROR: idEvento inválido';
+        LEAVE del;
+    END IF;
+
+    IF xidOrganizacion IS NULL OR xidOrganizacion <= 0 THEN
+        SET xMsg = 'ERROR: idOrganizacion inválido';
+        LEAVE del;
+    END IF;
+
+    IF NOT EXISTS(
+        SELECT 1 FROM relEventoOrg
+        WHERE idEvento = xidEvento AND idOrganizacion = xidOrganizacion
+    ) THEN
+        SET xMsg = 'ERROR: La relación evento-organización no existe';
+        LEAVE del;
+    END IF;
+
+    DELETE FROM relEventoOrg
+    WHERE idEvento = xidEvento AND idOrganizacion = xidOrganizacion;
+
+    SET xMsg = 'ÉXITO: Relación evento-organización eliminada';
+END del;
+
 CREATE PROCEDURE crearEventoHorario(
     IN xidEvento INT,
     IN xfechaInicio DATETIME,
@@ -1019,6 +1239,26 @@ modi: BEGIN
 
 END modi //
 
+CREATE PROCEDURE eliminarHorarioEvento(
+    IN xidHorario INT,
+    OUT xMsg VARCHAR(200)
+)
+del: BEGIN
+    IF xidHorario IS NULL OR xidHorario <= 0 THEN
+        SET xMsg = 'ERROR: El idHorario no es válido';
+        LEAVE del;
+    END IF;
+
+    IF NOT EXISTS(SELECT 1 FROM eventoHorario WHERE idHorario = xidHorario) THEN
+        SET xMsg = 'ERROR: El horario no existe';
+        LEAVE del;
+    END IF;
+
+    DELETE FROM eventoHorario WHERE idHorario = xidHorario;
+
+    SET xMsg = 'ÉXITO: Horario eliminado';
+END del;
+
 CREATE PROCEDURE crearRol(
     IN xrol VARCHAR(50),
     OUT xMsg VARCHAR(200)
@@ -1077,6 +1317,26 @@ modi:BEGIN
 
     SET xMsg = 'ÉXITO: Rol modificado correctamente';
 END modi//
+
+CREATE PROCEDURE eliminarRol(
+    IN xidRol INT,
+    OUT xMsg VARCHAR(200)
+)
+del: BEGIN
+    IF xidRol IS NULL OR xidRol <= 0 THEN
+        SET xMsg = 'ERROR: El idRol no es válido';
+        LEAVE del;
+    END IF;
+
+    IF NOT EXISTS(SELECT 1 FROM roles WHERE idRol = xidRol) THEN
+        SET xMsg = 'ERROR: El rol no existe';
+        LEAVE del;
+    END IF;
+
+    DELETE FROM roles WHERE idRol = xidRol;
+
+    SET xMsg = 'ÉXITO: Rol eliminado';
+END del;
 
 CREATE PROCEDURE crearRelPersonaEvento(
     IN xidPersona INT,
@@ -1146,6 +1406,27 @@ modi:BEGIN
 
     SET xMsg = 'ÉXITO: Relación modificada correctamente';
 END modi//
+
+CREATE PROCEDURE eliminarRelPersonaEvento(
+    IN xidPersona INT,
+    IN xidEvento INT,
+    IN xidRol INT,
+    OUT xMsg VARCHAR(200)
+)
+del: BEGIN
+    IF NOT EXISTS(
+        SELECT 1 FROM relPersonaEvento
+        WHERE idPersona = xidPersona AND idEvento = xidEvento AND idRol = xidRol
+    ) THEN
+        SET xMsg = 'ERROR: La relación persona-evento-rol no existe';
+        LEAVE del;
+    END IF;
+
+    DELETE FROM relPersonaEvento
+    WHERE idPersona = xidPersona AND idEvento = xidEvento AND idRol = xidRol;
+
+    SET xMsg = 'ÉXITO: Relación persona-evento-rol eliminada';
+END del;
 
 CREATE PROCEDURE crearLibros(
     IN xtitulo VARCHAR(40),
@@ -1222,6 +1503,26 @@ modi:BEGIN
     SET xMsg = 'ÉXITO: Libro modificado correctamente';
 END modi//
 
+CREATE PROCEDURE eliminarLibro(
+    IN xidLibro INT,
+    OUT xMsg VARCHAR(200)
+)
+del: BEGIN
+    IF xidLibro IS NULL OR xidLibro <= 0 THEN
+        SET xMsg = 'ERROR: El idLibro no es válido';
+        LEAVE del;
+    END IF;
+
+    IF NOT EXISTS(SELECT 1 FROM libros WHERE idLibro = xidLibro) THEN
+        SET xMsg = 'ERROR: El libro no existe';
+        LEAVE del;
+    END IF;
+
+    DELETE FROM libros WHERE idLibro = xidLibro;
+
+    SET xMsg = 'ÉXITO: Libro eliminado';
+END del;
+
 CREATE PROCEDURE crearPresEditorial(
     IN xidPresEditorial INT,
     OUT xMsg VARCHAR(200)
@@ -1280,6 +1581,26 @@ modi:BEGIN
 
     SET xMsg = 'ÉXITO: presEditorial modificada correctamente';
 END modi//
+
+CREATE PROCEDURE eliminarPresEditorial(
+    IN xidPresEditorial INT,
+    OUT xMsg VARCHAR(200)
+)
+del: BEGIN
+    IF xidPresEditorial IS NULL OR xidPresEditorial <= 0 THEN
+        SET xMsg = 'ERROR: El idPresEditorial no es válido';
+        LEAVE del;
+    END IF;
+
+    IF NOT EXISTS(SELECT 1 FROM presEditorial WHERE idPresEditorial = xidPresEditorial) THEN
+        SET xMsg = 'ERROR: La presEditorial no existe';
+        LEAVE del;
+    END IF;
+
+    DELETE FROM presEditorial WHERE idPresEditorial = xidPresEditorial;
+
+    SET xMsg = 'ÉXITO: presEditorial eliminada';
+END del;
 
 CREATE PROCEDURE crearRelLibroPres(
     IN xidLibro INT,
@@ -1376,6 +1697,26 @@ modi:BEGIN
     SET xMsg = 'ÉXITO: Relación libro-presEditorial modificada correctamente';
 END modi//
 
+CREATE PROCEDURE eliminarRelLibroPres(
+    IN xidLibro INT,
+    IN xidPresEditorial INT,
+    OUT xMsg VARCHAR(200)
+)
+del: BEGIN
+    IF NOT EXISTS(
+        SELECT 1 FROM relLibroPres
+        WHERE idLibro = xidLibro AND idPresEditorial = xidPresEditorial
+    ) THEN
+        SET xMsg = 'ERROR: La relación libro-presEditorial no existe';
+        LEAVE del;
+    END IF;
+
+    DELETE FROM relLibroPres
+    WHERE idLibro = xidLibro AND idPresEditorial = xidPresEditorial;
+
+    SET xMsg = 'ÉXITO: Relación libro-presEditorial eliminada';
+END del;
+
 CREATE PROCEDURE crearEventoMusical(
     IN xidMusical INT,
     IN xsetlist TEXT,
@@ -1425,6 +1766,26 @@ modi:BEGIN
 
     SET xMsg = 'ÉXITO: Evento musical modificado correctamente';
 END modi//
+
+CREATE PROCEDURE eliminarEventoMusical(
+    IN xidMusical INT,
+    OUT xMsg VARCHAR(200)
+)
+del: BEGIN
+    IF xidMusical IS NULL OR xidMusical <= 0 THEN
+        SET xMsg = 'ERROR: El idMusical no es válido';
+        LEAVE del;
+    END IF;
+
+    IF NOT EXISTS(SELECT 1 FROM eventoMusical WHERE idMusical = xidMusical) THEN
+        SET xMsg = 'ERROR: El evento musical no existe';
+        LEAVE del;
+    END IF;
+
+    DELETE FROM eventoMusical WHERE idMusical = xidMusical;
+
+    SET xMsg = 'ÉXITO: Evento musical eliminado';
+END del;
 
 CREATE PROCEDURE crearTaller(
     IN xidTaller INT,
@@ -1479,6 +1840,26 @@ modi:BEGIN
     SET xMsg = 'ÉXITO: Taller modificado correctamente';
 END modi//
 
+CREATE PROCEDURE eliminarTaller(
+    IN xidTaller INT,
+    OUT xMsg VARCHAR(200)
+)
+del: BEGIN
+    IF xidTaller IS NULL OR xidTaller <= 0 THEN
+        SET xMsg = 'ERROR: El idTaller no es válido';
+        LEAVE del;
+    END IF;
+
+    IF NOT EXISTS(SELECT 1 FROM taller WHERE idTaller = xidTaller) THEN
+        SET xMsg = 'ERROR: El taller no existe';
+        LEAVE del;
+    END IF;
+
+    DELETE FROM taller WHERE idTaller = xidTaller;
+
+    SET xMsg = 'ÉXITO: Taller eliminado';
+END del;
+
 CREATE PROCEDURE crearPremiacion(
     IN xidPremiacion INT,
     IN xpremio VARCHAR(60),
@@ -1528,4 +1909,25 @@ modi:BEGIN
 
     SET xMsg = 'ÉXITO: Premiación modificada correctamente';
 END modi//
+
+CREATE PROCEDURE eliminarPremiacion(
+    IN xidPremiacion INT,
+    OUT xMsg VARCHAR(200)
+)
+del: BEGIN
+    IF xidPremiacion IS NULL OR xidPremiacion <= 0 THEN
+        SET xMsg = 'ERROR: El idPremiacion no es válido';
+        LEAVE del;
+    END IF;
+
+    IF NOT EXISTS(SELECT 1 FROM premiacion WHERE idPremiacion = xidPremiacion) THEN
+        SET xMsg = 'ERROR: La premiación no existe';
+        LEAVE del;
+    END IF;
+
+    DELETE FROM premiacion WHERE idPremiacion = xidPremiacion;
+
+    SET xMsg = 'ÉXITO: Premiación eliminada';
+END del;
+
 DELIMITER ;

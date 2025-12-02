@@ -89,6 +89,25 @@ CALL modificarTaller(1, 'Materiales actualizados', '10-14', @mensaje); SELECT @m
 
 CALL crearPremiacion(1, 'Premio al Mejor Autor', @mensaje); SELECT @mensaje;
 CALL modificarPremiacion(1, 'Premio actualizado', @mensaje); SELECT @mensaje;
+
+CALL eliminarEspacio(1, @msg); SELECT @msg;
+CALL eliminarSede(1, @msg); SELECT @msg;
+CALL eliminarPersona(10, @msg); SELECT @msg;
+CALL eliminarRed(3, @msg); SELECT @msg;
+CALL eliminarRedPersona(5, 2, @msg); SELECT @msg;
+CALL eliminarTipoEvento(4, @msg); SELECT @msg;
+CALL eliminarEvento(12, @msg); SELECT @msg;
+CALL eliminarRelEventoOrg(2, 8, @msg); SELECT @msg;
+CALL eliminarHorarioEvento(7, @msg); SELECT @msg;
+CALL eliminarRol(6, @msg); SELECT @msg;
+CALL eliminarRelPersonaEvento(3, 9, 2, @msg); SELECT @msg;
+CALL eliminarLibro(14, @msg); SELECT @msg;
+CALL eliminarPresEditorial(5, @msg); SELECT @msg;
+CALL eliminarRelLibroPres(4, 5, @msg); SELECT @msg;
+CALL eliminarEventoMusical(3, @msg); SELECT @msg;
+CALL eliminarTaller(2, @msg); SELECT @msg;
+CALL eliminarPremiacion(1, @msg); SELECT @msg;
+
 -- ==============================================
 --              CONSULTAS GENERALES
 -- ==============================================

@@ -13,23 +13,18 @@
     <h1>Gestión de Organizaciones</h1>
 
     <!-- BOTÓN PARA ABRIR MODAL -->
-    <button class="btn-add" onclick="openModal()">➕ Nueva Organización</button>
+    <button class="btn-add" onclick="openModalNuevo()">➕ Nueva Organización</button>
 
     <!-- BUSCADOR + FILTROS -->
     <div class="filters">
-        <input type="text" id="search" placeholder="Buscar por nombre">
+        <input type="text" id="search" placeholder="Buscar por nombre o correo">
 
         <select id="filterPais">
             <option value="">Filtrar por país</option>
-            <option>México</option>
-            <option>Argentina</option>
-            <option>Chile</option>
         </select>
 
         <select id="filterEstado">
             <option value="">Filtrar por estado</option>
-            <option>CDMX</option>
-            <option>Jalisco</option>
         </select>
     </div>
 
@@ -37,20 +32,21 @@
     <table>
         <thead>
             <tr>
-                <th>ID</th> <th>Nombre</th> <th>Telefono</th><th>Correo</th> 
-                <th>País</th> <th>Estado</th> <th>Ciudad</th> <th>Acciones</th>
+                <th>ID</th>
+                <th>Nombre</th>
+                <th>Teléfono</th>
+                <th>Correo</th>
+                <th>País</th>
+                <th>Estado</th>
+                <th>Ciudad</th>
+                <th>Acciones</th>
             </tr>
         </thead>
-        <tbody id="tblOrganizaciones">
-            <!-- Aquí se insertan filas dinámicamente -->
-        </tbody>
+        <tbody id="tblOrganizaciones"></tbody>
     </table>
 
     <!-- PAGINACIÓN -->
-    <div class="paginacion" id="paginacion">
-        <button class="page-btn">Anterior</button>
-        <button class="page-btn">Siguiente</button>
-    </div>
+    <div class="paginacion" id="paginacion"></div>
 </div>
 
 <!-- TOAST -->
@@ -69,44 +65,14 @@
         <input id="estado" type="text" placeholder="Estado">
         <input id="ciudad" type="text" placeholder="Ciudad">
 
-        <button class="btn-primary" onclick="save()">Guardar</button>
-        <button class="btn-danger" onclick="closeModal()">Cancelar</button>
+        <div class="modal-buttons">
+            <button class="btn-primary" type="button" onclick="save()">Guardar</button>
+            <button class="btn-danger" type="button" onclick="closeModal()">Cancelar</button>
+        </div>
     </div>
 </div>
 
 <script src="../scripts/orgScript.js"></script>
-<script>
-/* ------------------------ TOAST ------------------------ */
-function toast(msg) {
-    const x = document.getElementById("toast");
-    x.innerText = msg;
-    x.className = "show";
-    setTimeout(() => x.className = x.className.replace("show", ""), 3000);
-}
-
-/* ------------------------ MODAL ------------------------ */
-function openModal() {
-    document.getElementById("modal").style.display = "block";
-}
-function closeModal() {
-    document.getElementById("modal").style.display = "none";
-}
-
-/* ------------------------ VALIDACIONES ------------------------ */
-function save() {
-
-    const nombre = document.getElementById("nombre").value.trim();
-    const correo = document.getElementById("correo").value.trim();
-    
-    if (!nombre) return toast("El nombre es obligatorio");
-    if (!correo) return toast("El correo es obligatorio");
-    if (!correo.includes("@")) return toast("El correo no es válido");
-
-    toast("Formulario válido (conectar a API)");
-    closeModal();
-}
-
-</script>
 
 </body>
 </html>

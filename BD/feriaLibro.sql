@@ -30,7 +30,8 @@ CREATE TABLE sedes(
 CREATE TABLE personas(
 	idPersona int auto_increment primary key,
     nombre varchar(100) not null,
-    biografia text default null
+    biografia text default null,
+    imagen text default null
 );
 
 CREATE TABLE redes(
@@ -62,6 +63,7 @@ CREATE TABLE eventos(
     participaPublico boolean default 0,
     descripcion text default null,
     infoAd text default null,
+    imagen text default null,
     idSede int not null,
     idTipoEvento int not null,
     FOREIGN KEY (idSede) references sedes(idSede)
@@ -111,6 +113,7 @@ CREATE TABLE libros(
 	idLibro int auto_increment primary key,
     titulo varchar(40),
     sinopsis varchar(200),
+    imagen text default null,
     idAutor int not null,
     idEditorial int not null,
     FOREIGN KEY (idAutor) REFERENCES personas(idPersona)

@@ -786,10 +786,11 @@ INSERT INTO eventoHorario (idEvento, fechaInicio, fechaFin) VALUES
 
 -- EVENTO 51
 INSERT INTO eventoHorario (idEvento, fechaInicio, fechaFin) VALUES
-(51, '2025-04-20 10:00:00', '2025-04-20 11:00:00'),
-(51, '2025-04-23 12:00:00', '2025-04-23 13:00:00'),
+(51, '2025-04-20 7:00:00', '2025-04-20 8:00:00'),
+(51, '2025-04-23 14:00:00', '2025-04-23 15:00:00');
 
 -- EVENTO 52
+INSERT INTO eventoHorario (idEvento, fechaInicio, fechaFin) VALUES
 (52, '2025-04-21 09:00:00', '2025-04-21 10:30:00'),
 
 -- EVENTO 53
@@ -1063,52 +1064,52 @@ INSERT INTO relPersonaEvento (idPersona, idEvento, idRol) VALUES
 
 -- Evento 28
 (51, 28, 5),
-(53, 28, 1),
-
+(53, 28, 1);
+INSERT INTO relPersonaEvento VALUES
 -- Evento 29
 (54, 29, 7),
-(56, 29, 3),
-
+(56, 29, 3);
+INSERT INTO relPersonaEvento VALUES
 -- Evento 30
 (55, 30, 6),
-(59, 30, 1),
-
+(59, 30, 1);
+INSERT INTO relPersonaEvento VALUES
 -- Evento 31
-(12, 31, 3),
-(7, 31, 6),
-
+(11, 31, 3),
+(10, 31, 6);
+INSERT INTO relPersonaEvento VALUES
 -- Evento 32
-(14, 32, 4),
-(28, 32, 2),
-
+(12, 32, 4),
+(7, 32, 2);
+INSERT INTO relPersonaEvento VALUES
 -- Evento 33
-(5, 33, 1),
-(9, 33, 5),
-
+(8, 33, 1),
+(6, 33, 5);
+INSERT INTO relPersonaEvento VALUES
 -- Evento 34
-(11, 34, 7),
-(26, 34, 3),
-
+(12, 34, 7),
+(25, 34, 3);
+INSERT INTO relPersonaEvento VALUES
 -- Evento 35
 (30, 35, 6),
-(52, 35, 4),
-
+(52, 35, 4);
+INSERT INTO relPersonaEvento VALUES
 -- Evento 36
 (35, 36, 1),
-(43, 36, 3),
-
+(43, 36, 3);
+INSERT INTO relPersonaEvento VALUES
 -- Evento 37
 (22, 37, 8),
-(45, 37, 5),
-
+(45, 37, 5);
+INSERT INTO relPersonaEvento VALUES
 -- Evento 38
-(18, 38, 2),
-(33, 38, 4),
-
+(17, 38, 2),
+(32, 38, 4);
+INSERT INTO relPersonaEvento VALUES
 -- Evento 39
 (27, 39, 6),
-(58, 39, 3),
-
+(58, 39, 3);
+INSERT INTO relPersonaEvento VALUES
 -- Evento 40
 (16, 40, 7),
 (20, 40, 1),
@@ -1155,7 +1156,7 @@ INSERT INTO relPersonaEvento (idPersona, idEvento, idRol) VALUES
 
 -- EVENTO 51
 INSERT INTO relPersonaEvento VALUES
-(12,51,1),(33,51,2);
+(13,51,1),(34,51,2);
 
 -- EVENTO 52
 INSERT INTO relPersonaEvento VALUES
@@ -1211,7 +1212,7 @@ INSERT INTO relPersonaEvento VALUES
 
 -- EVENTO 65
 INSERT INTO relPersonaEvento VALUES
-(8,65,1),(40,65,4);
+(7,65,1),(39,65,4);
 
 -- EVENTO 66
 INSERT INTO relPersonaEvento VALUES
@@ -1231,7 +1232,7 @@ INSERT INTO relPersonaEvento VALUES
 
 -- EVENTO 70
 INSERT INTO relPersonaEvento VALUES
-(23,70,8),(55,70,7);
+(24,70,8),(54,70,7);
 
 -- EVENTO 71
 INSERT INTO relPersonaEvento VALUES
@@ -1239,7 +1240,7 @@ INSERT INTO relPersonaEvento VALUES
 
 -- EVENTO 72
 INSERT INTO relPersonaEvento VALUES
-(9,72,1),(31,72,5);
+(8,72,1),(30,72,5);
 
 -- EVENTO 73
 INSERT INTO relPersonaEvento VALUES

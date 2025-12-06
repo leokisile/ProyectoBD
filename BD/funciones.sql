@@ -568,6 +568,7 @@ END del;
 CREATE PROCEDURE crearPersona(
     IN xnombre VARCHAR(100),
     IN xbio TEXT,
+    IN ximg TEXT,
     OUT xMsg VARCHAR(200)
 )
 crea: BEGIN
@@ -577,8 +578,8 @@ crea: BEGIN
         LEAVE crea;
     END IF;
 
-    INSERT INTO personas(nombre, biografia)
-    VALUES (xnombre, xbio);
+    INSERT INTO personas(nombre, biografia, imagen)
+    VALUES (xnombre, xbio, ximg);
 
     SET xMsg = 'ÉXITO: Persona creada correctamente';
 END crea//
@@ -587,6 +588,7 @@ CREATE PROCEDURE modificarPersona(
     IN xidPersona INT,
     IN xnombre VARCHAR(100),
     IN xbio TEXT,
+    IN ximg TEXT,
     OUT xMsg VARCHAR(200)
 )
 modi: BEGIN
@@ -604,7 +606,7 @@ modi: BEGIN
 
     UPDATE personas
     SET nombre = xnombre,
-        biografia = xbio
+        biografia = xbio, imagen = ximg
     WHERE idPersona = xidPersona;
 
     SET xMsg = 'ÉXITO: Persona modificada correctamente';
@@ -924,6 +926,7 @@ CREATE PROCEDURE crearEvento(
     IN xparticipaPublico BOOLEAN,
     IN xdescripcion TEXT,
     IN xinfoAd TEXT,
+    IN ximg TEXT,
     IN xidSede INT,
     IN xidTipoEvento INT,
     OUT xMsg VARCHAR(200)
@@ -967,11 +970,11 @@ crea: BEGIN
     -- Inserción
     INSERT INTO eventos(
         titulo, sinopsis, reqRegistro, participaPublico,
-        descripcion, infoAd, idSede, idTipoEvento
+        descripcion, infoAd, imagen, idSede, idTipoEvento
     )
     VALUES (
         xtitulo, xsinopsis, xreqRegistro, xparticipaPublico,
-        xdescripcion, xinfoAd, xidSede, xidTipoEvento
+        xdescripcion, xinfoAd, ximg, xidSede, xidTipoEvento
     );
 
     SET xMsg = 'Éxito: Evento creado correctamente';
@@ -986,6 +989,7 @@ CREATE PROCEDURE modificarEvento(
     IN xparticipaPublico BOOLEAN,
     IN xdescripcion TEXT,
     IN xinfoAd TEXT,
+    IN ximg TEXT,
     IN xidSede INT,
     IN xidTipoEvento INT,
     OUT xMsg VARCHAR(200)
@@ -1036,6 +1040,7 @@ modi: BEGIN
         participaPublico = xparticipaPublico,
         descripcion = xdescripcion,
         infoAd = xinfoAd,
+        imagen = ximg.
         idSede = xidSede,
         idTipoEvento = xidTipoEvento
     WHERE idEvento = xidEvento;
@@ -1431,6 +1436,7 @@ END del;
 CREATE PROCEDURE crearLibros(
     IN xtitulo VARCHAR(40),
     IN xsinopsis VARCHAR(200),
+    IN ximg TEXT,
     IN xidAutor INT,
     IN xidEditorial INT,
     OUT xMsg VARCHAR(200)
@@ -1463,8 +1469,8 @@ crea:BEGIN
         LEAVE crea;
     END IF;
 
-    INSERT INTO libros(titulo, sinopsis, idAutor, idEditorial)
-    VALUES (xtitulo, xsinopsis, xidAutor, xidEditorial);
+    INSERT INTO libros(titulo, sinopsis, imagen, idAutor, idEditorial)
+    VALUES (xtitulo, xsinopsis, ximg, xidAutor, xidEditorial);
 
     SET xMsg = 'ÉXITO: Libro creado correctamente';
 END crea//
@@ -1473,6 +1479,7 @@ CREATE PROCEDURE modificarLibros(
     IN xidLibro INT,
     IN xtitulo VARCHAR(40),
     IN xsinopsis VARCHAR(200),
+    IN ximg TEXT,
     IN xidAutor INT,
     IN xidEditorial INT,
     OUT xMsg VARCHAR(200)
@@ -1496,6 +1503,7 @@ modi:BEGIN
     UPDATE libros
     SET titulo = xtitulo,
         sinopsis = xsinopsis,
+        imagen = ximg,
         idAutor = xidAutor,
         idEditorial = xidEditorial
     WHERE idLibro = xidLibro;

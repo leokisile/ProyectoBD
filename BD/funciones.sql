@@ -47,6 +47,12 @@ SELECT * FROM programaCultural; -- Lista de id y nombre del programa Cultural
 -- ===============================================================================
 DROP PROCEDURE IF EXISTS eventoCategoria;
 DROP PROCEDURE IF EXISTS eventoIndv;
+
+DROP PROCEDURE IF EXISTS librosPres;
+DROP PROCEDURE IF EXISTS setlist; 
+DROP PROCEDURE IF EXISTS datosTaller;
+DROP PROCEDURE IF EXISTS premio;
+
 DROP FUNCTION IF EXISTS sedeOcupada;
 DROP FUNCTION IF EXISTS horPersonaTraslape;
 DROP TRIGGER IF EXISTS trg_horSedeTraslape;
@@ -117,18 +123,32 @@ CREATE PROCEDURE eventoCategoria (
 )
 BEGIN
     IF xfechaInicio IS NULL THEN
-        SELECT -- Fecha no especificada
+
+        SELECT 
             e.titulo,
             GROUP_CONCAT(
                 CASE WHEN pe.idRol != 3 THEN p.nombre END
                 SEPARATOR ', '
             ) AS participantes,
-            GROUP_CONCAT(
-                CASE WHEN pe.idRol = 3 THEN p.nombre END
-                SEPARATOR ', '
+
+            /* Presentadores o, si no hay, organizaciones */
+            COALESCE(
+                NULLIF(
+                    GROUP_CONCAT(
+                        CASE WHEN pe.idRol = 3 THEN p.nombre END
+                        SEPARATOR ', '
+                    ),
+                    ''
+                ),
+                (SELECT GROUP_CONCAT(o.nombre SEPARATOR ', ')
+                 FROM relEventoOrg reo
+                 INNER JOIN organizaciones o ON o.idOrganizacion = reo.idOrganizacion
+                 WHERE reo.idEvento = e.idEvento)
             ) AS presentadores,
+
             s.nombre AS sede,
             e.descripcion
+
         FROM eventos e
             INNER JOIN relPersonaEvento pe ON pe.idEvento = e.idEvento
             INNER JOIN personas p ON p.idPersona = pe.idPersona
@@ -138,25 +158,40 @@ BEGIN
         GROUP BY e.idEvento, s.nombre, e.descripcion, eh.fechaInicio, eh.fechaFin
         ORDER BY fechaInicio, fechaFin;
 
-    ELSE -- Fecha especificada
+    ELSE 
+
         SELECT 
             e.titulo,
             GROUP_CONCAT(
                 CASE WHEN pe.idRol != 3 THEN p.nombre END
                 SEPARATOR '\n '
             ) AS participantes,
-            GROUP_CONCAT(
-                CASE WHEN pe.idRol = 3 THEN p.nombre END
-                SEPARATOR '\n '
+
+            /* Presentadores o, si no hay, organizaciones */
+            COALESCE(
+                NULLIF(
+                    GROUP_CONCAT(
+                        CASE WHEN pe.idRol = 3 THEN p.nombre END
+                        SEPARATOR '\n '
+                    ),
+                    ''
+                ),
+                (SELECT GROUP_CONCAT(o.nombre SEPARATOR '\n ')
+                 FROM relEventoOrg reo
+                 INNER JOIN organizaciones o ON o.idOrganizacion = reo.idOrganizacion
+                 WHERE reo.idEvento = e.idEvento)
             ) AS presentadores,
+
             s.nombre AS sede,
             e.descripcion
+
         FROM eventos e
             INNER JOIN relPersonaEvento pe ON pe.idEvento = e.idEvento
             INNER JOIN personas p ON p.idPersona = pe.idPersona
             INNER JOIN sedes s ON s.idSede = e.idSede
             INNER JOIN eventoHorario eh ON eh.idEvento = e.idEvento
-        WHERE e.idTipoEvento = xidTipoEvento AND DATE(eh.fechaInicio) = DATE(xfechaInicio)
+        WHERE e.idTipoEvento = xidTipoEvento 
+          AND DATE(eh.fechaInicio) = DATE(xfechaInicio)
         GROUP BY e.idEvento, s.nombre, e.descripcion, eh.fechaInicio, eh.fechaFin
         ORDER BY fechaInicio, fechaFin;
 
@@ -166,29 +201,81 @@ END//
 CREATE PROCEDURE eventoIndv (IN xidEvento INT)
 BEGIN
 	SELECT 
+		te.tipoEvento,
 		e.titulo,
+
 		GROUP_CONCAT(
 			CASE WHEN pe.idRol != 3 THEN CONCAT(p.nombre, ": ", p.biografia) END
 			SEPARATOR '\n '
 		) AS participantes,
-		GROUP_CONCAT(
-			CASE WHEN pe.idRol = 3 THEN p.nombre END
-			SEPARATOR '\n '
+
+		/* Presentadores o, si no hay, organizaciones */
+		COALESCE(
+			NULLIF(
+				GROUP_CONCAT(
+					CASE WHEN pe.idRol = 3 THEN p.nombre END
+					SEPARATOR '\n '
+				),
+				''
+			),
+			(SELECT GROUP_CONCAT(o.nombre SEPARATOR '\n ')
+			 FROM relEventoOrg reo
+			 INNER JOIN organizaciones o ON o.idOrganizacion = reo.idOrganizacion
+			 WHERE reo.idEvento = e.idEvento)
 		) AS presentadores,
+
 		s.nombre AS sede,
 		e.sinopsis,
 		e.descripcion,
 		e.infoAd,
 		e.reqRegistro,
 		e.participaPublico
+
 	FROM eventos e
 		INNER JOIN relPersonaEvento pe ON pe.idEvento = e.idEvento
 		INNER JOIN personas p ON p.idPersona = pe.idPersona
 		INNER JOIN sedes s ON s.idSede = e.idSede
+        INNER JOIN tipoEventos te ON te.idTipoEvento = e.idTipoEvento
 		INNER JOIN eventoHorario eh ON eh.idEvento = e.idEvento
 	WHERE e.idEvento = xidEvento
-        GROUP BY e.idEvento, s.nombre, e.descripcion, eh.fechaInicio, eh.fechaFin
-        ORDER BY fechaInicio, fechaFin;
+	GROUP BY e.idEvento, s.nombre, e.descripcion, eh.fechaInicio, eh.fechaFin
+	ORDER BY fechaInicio, fechaFin;
+END //
+
+CREATE PROCEDURE librosPres (IN xidEvento INT)
+BEGIN
+	SELECT 
+		l.titulo, l.imagen, l.sinopsis, p.nombre AS autor
+	FROM presEditorial pe
+    INNER JOIN relLibroPres rlp ON pe.idPresEditorial = rlp.idPresEditorial
+    INNER JOIN libros l ON rlp.idLibro = l.idLibro
+    INNER JOIN personas p ON l.idAutor = p.idPersona
+    WHERE pe.idPresEditorial = xidEvento;
+END //
+-- setlist datosTaller premio
+
+CREATE PROCEDURE setlist (IN xidEvento INT)
+BEGIN
+	SELECT 
+		setlist
+	FROM eventoMusical
+    WHERE idMusical = xidEvento;
+END //
+
+CREATE PROCEDURE datosTaller (IN xidEvento INT)
+BEGIN
+	SELECT 
+		materiales, rangoEdad
+	FROM taller
+    WHERE idTaller = xidEvento;
+END //
+
+CREATE PROCEDURE premio (IN xidEvento INT)
+BEGIN
+	SELECT 
+		premio
+	FROM premiacion
+    WHERE idPremiacion = xidEvento;
 END //
 
 CREATE FUNCTION sedeOcupada(

@@ -5,8 +5,13 @@
 -- Seleccionar todos los eventos de una categoría y fecha especifica
 CALL eventoCategoria(1, "2025-04-20");  -- Entrada: idTipoEvento y fecha (YYYY-MM-DD) deseado (passar en el llamado en web)
 CALL eventoCategoria(1, null);
+CALL librosPres(1); -- Muestra los libros de una presentacion Editorial
 
-CALL eventoIndv(2); -- Información de un solo evento mediante su idEvento
+-- En la ventana evento, comparar si existe el idEvento en una de estas funciones
+CALL eventoIndv(1); -- Información de un solo evento mediante su idEvento
+CALL setlist(61); -- Devuelve la setlist de un evento musical
+CALL datosTaller(13); -- MAteriales y rango de edad de un taller  idTipoEvento 5,6
+CALL premio(39); -- Premio que se da en la premiacion   idTipoEvento 13,14,15
 
 SELECT sedeOcupada(3, "2025-04-20 10:01:00", "2025-04-20 10:59:00");-- 1: Hay un evento que inicia a las 10 y termina a las 11
 SELECT sedeOcupada(3, "2025-04-20 9:59:00", "2025-04-20 10:00:00"); -- 0: El otro evento inicia a las 10, así que ese minuto está desocupado

@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CRUD Sedes</title>
+
+<link rel="stylesheet" href="../css/orgStyle.css">
+</head>
+<body>
+
+<div class="container">
+    <h1>Gestión de Sedes</h1>
+
+    <!-- BOTÓN PARA ABRIR MODAL -->
+    <button class="btn-add" onclick="openModalNuevo()">➕ Nueva Sede</button>
+
+    <!-- BUSCADOR + FILTROS -->
+    <div class="filters">
+        <input type="text" id="search" placeholder="Buscar por nombre">
+        <select id="filterPais">
+            <option value="">Filtrar por tipo de espacio</option>
+        </select>
+    </div>
+
+    <!-- TABLA -->
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Nombre</th>
+                <th>Ubicacion</th>
+                <th>Tipo Espacio</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody id="tblOrganizaciones"></tbody>
+    </table>
+
+    <!-- PAGINACIÓN -->
+    <div class="paginacion" id="paginacion"></div>
+</div>
+
+<!-- TOAST -->
+<div id="toast"></div>
+
+<!-- MODAL -->
+<div id="modal" class="modal">
+    <div class="modal-content">
+        <h2 id="modalTitle">Nueva Sede</h2>
+
+        <input id="nombre" type="text" placeholder="Nombre">
+        <input id="ubicacion" type="text" placeholder="Ubicacion">
+        <select id="tipoEspacio">
+            <option value="">Escoja un tipo de Espacio</option>
+        </select>
+
+        <div class="modal-buttons">
+            <button class="btn-primary" type="button" onclick="save()">Guardar</button>
+            <button class="btn-danger" type="button" onclick="closeModal()">Cancelar</button>
+        </div>
+    </div>
+</div>
+
+<script src="../scripts/orgScript.js"></script>
+
+</body>
+</html>

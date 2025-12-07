@@ -111,7 +111,7 @@ function openModalNuevo() {
     editandoId = null;
     modalTitle.textContent = "Nueva Organización";
     limpiarModal();
-    document.getElementById("modal").style.display = "block";
+    document.getElementById("modal").style.display = "flex";
 }
 
 // 👉 ABRIR MODAL PARA EDITAR
@@ -131,7 +131,7 @@ function editar(id) {
     inputEstado.value = u.estado;
     inputCiudad.value = u.ciudad;
 
-    document.getElementById("modal").style.display = "block";
+    document.getElementById("modal").style.display = "flex";
 }
 
 // 👉 LIMPIAR CAMPOS

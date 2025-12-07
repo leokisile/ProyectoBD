@@ -1,0 +1,157 @@
+/* ================= RESET GENERAL ================= */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+body {
+    background-color: #f7f7f7;
+    color: #222;
+    line-height: 1.5;
+}
+
+/* ================= HEADER ================= */
+.header {
+    width: 100%;
+    background-color: #1a1a1a;
+    color: white;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 40px;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+}
+
+.header h1 {
+    margin: 0;
+}
+
+nav ul {
+    list-style: none;
+    display: flex;
+    gap: 20px;
+}
+
+nav ul li a {
+    text-decoration: none;
+    color: white;
+    font-weight: bold;
+    padding: 8px 12px;
+    display: block;
+    transition: 0.3s;
+}
+
+nav ul li a:hover {
+    background-color: #333;
+    border-radius: 5px;
+}
+
+/* ============== CONTENEDOR PRINCIPAL EVENTO =============== */
+.evento {
+    max-width: 1100px;
+    margin: 40px auto;
+    background-color: white;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+}
+
+/* ================= IMAGEN DEL EVENTO ================= */
+.imgEvento {
+    width: 100%;
+    overflow: hidden;
+    border-radius: 10px;
+    margin-bottom: 20px;
+}
+
+.imgEvento img {
+    width: 100%;
+    height: auto;
+    display: block;
+    border-radius: 10px;
+}
+
+/* ================= TITULO DEL EVENTO ================= */
+.tituloEvento {
+    margin-bottom: 30px;
+}
+
+.tituloEvento p {
+    font-size: 16px;
+    color: #555;
+}
+
+.tituloEvento h2 {
+    font-size: 32px;
+    margin: 5px 0 10px 0;
+}
+
+.tituloEvento h3 {
+    font-size: 18px;
+    margin-top: 10px;
+    color: #444;
+}
+
+/* ============== CUERPO / DETALLES DEL EVENTO =============== */
+.cuerpoEvento {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 30px;
+    margin-top: 20px;
+}
+
+.detallesEvento, .infoAdicionalEvento, .descripcionEvento {
+    background-color: #fafafa;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 3px 10px rgba(0,0,0,0.05);
+}
+
+.detallesEvento hr {
+    margin: 15px 0;
+    border: 0;
+    border-top: 1px solid #ddd;
+}
+
+.detallesEvento h3,
+.infoAdicionalEvento h3,
+.descripcionEvento h3 {
+    margin-bottom: 10px;
+    color: #222;
+}
+
+.detallesEvento p,
+.infoAdicionalEvento p,
+.descripcionEvento p {
+    color: #444;
+    margin-bottom: 10px;
+}
+
+/* ================= BLOQUE DESCRIPCIÓN COMPLETA ================= */
+.descripcionEvento {
+    grid-column: 1 / span 2;
+}
+
+/* ================= FOOTER ================= */
+.footer {
+    background-color: #1a1a1a;
+    color: white;
+    text-align: center;
+    padding: 20px 0;
+    margin-top: 40px;
+}
+
+/* ================= RESPONSIVE ================= */
+@media (max-width: 900px) {
+    .cuerpoEvento {
+        grid-template-columns: 1fr;
+    }
+
+    .descripcionEvento {
+        grid-column: 1;
+    }
+}

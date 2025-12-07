@@ -4,27 +4,30 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Programa Editorial</title>
-    <link rel="stylesheet" href="css/orgStyle.css">
+    <link rel="stylesheet" href="../css/progEditorial.css">
 </head>
 <body>
+
     <div class="header" id="header">
-        <h1>FENAL</h1> <!--Aqui usan una imagen en vez de texto-->
+        <h1>FENAL</h1>
         <nav>
             <ul>
                 <li><a href="index.html">Inicio</a></li>
-                <li><a href="progGeneral.html">Progrma General</a></li>
+                <li><a href="progGeneral.html">Programa General</a></li>
                 <li><a href="progEditorial.html">Programa Editorial</a></li>
-                <li><a href="progArtistico.html">Programa Artistico</a></li>
+                <li><a href="progArtistico.html">Programa Artístico</a></li>
                 <li><a href="talleres.html">Talleres</a></li>
-                <li><a href="particpantes.html">Participantes</a></li>
+                <li><a href="participantes.html">Participantes</a></li>
                 <li><a href="nosotros.html">Nosotros</a></li>
             </ul>
         </nav>
     </div>
 
-    <div class="titulo" >
+    <!-- CONTENEDOR DEL TÍTULO + FILTROS EN UNA SOLA LÍNEA -->
+    <div class="titulo-filtros">
         <h2>Programa Editorial</h2>
-        <div class="selectCategorias">
+
+        <div class="filtros">
             <select id="categoriaFiltro">
                 <option value="">Todas las Categorías</option>
                 <option value="Ficción">Ficción</option>
@@ -33,38 +36,47 @@
                 <option value="Juvenil">Juvenil</option>
                 <option value="Académico">Académico</option>
             </select>
-        </div>
-        <div class="selectFechas">
+
             <select id="fechaFiltro">
-                <option value="">Todas las Categorías</option>
-                <option value="dia1">Dia 1</option>
-                <option value="dia2">Dia 2</option>
+                <option value="">Todas las Fechas</option>
+                <option value="dia1">Día 1</option>
+                <option value="dia2">Día 2</option>
             </select>
         </div>
     </div>
 
+    <!-- CARRUSEL -->
     <div class="carruselPatrocinadores">
-        <div class="slide">
-            <img src="images/slide1.jpg" alt="Slide 1">
-        </div>
-        <div class="slide">
-            <img src="images/slide2.jpg" alt="Slide 2">
-        </div>
+        <div class="slide"><img src="images/slide1.jpg" alt="Slide 1"></div>
+        <div class="slide"><img src="images/slide2.jpg" alt="Slide 2"></div>
     </div>
 
-    <div class="filaFichas">
+    <!-- CUADRÍCULA DE FICHAS -->
+    <div class="gridEventos">
         <div class="fichaEvento">
             <img src="images/libro1.jpg" alt="Libro 1">
-            <h3>Titulo</h3>
-            <p>Presenta: Juan Pérez</p>
-            <p>Categoría: Ficción</p>
-            <p>Sede: Auditorio2</p>
-            <p>Sinopsis reducida</p>
-            <p>Domingo 17 a las 12:00 horas</p>
+            <h3>Título del libro</h3>
+            <p><strong>Presenta:</strong> Juan Pérez</p>
+            <p><strong>Categoría:</strong> Ficción</p>
+            <p><strong>Sede:</strong> Auditorio 2</p>
+            <p class="sinopsis">Sinopsis reducida del libro...</p>
+            <p class="fecha">Domingo 17 – 12:00 hrs</p>
+        </div>
+
+        <div class="fichaEvento">
+            <img src="images/libro2.jpg" alt="Libro 2">
+            <h3>Título del libro 2</h3>
+            <p><strong>Presenta:</strong> Ana Gómez</p>
+            <p><strong>Categoría:</strong> Juvenil</p>
+            <p><strong>Sede:</strong> Foro 1</p>
+            <p class="sinopsis">Descripción breve…</p>
+            <p class="fecha">Sábado 16 – 16:00 hrs</p>
         </div>
     </div>
 
     <div class="footer">
         <p>&copy; 2024 FENAL. Todos los derechos reservados.</p>
     </div>
+
+</body>
 </html>

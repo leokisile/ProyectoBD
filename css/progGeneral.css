@@ -1,0 +1,137 @@
+/* =========================
+   GENERAL
+========================= */
+body {
+    margin: 0;
+    font-family: Arial, Helvetica, sans-serif;
+    background: #f5f5f5;
+}
+
+/* =========================
+   HEADER
+========================= */
+.header {
+    position: sticky;
+    top: 0;
+    background: #222;
+    color: white;
+    padding: 12px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    z-index: 100;
+}
+
+.header h1 {
+    margin: 0;
+    font-size: 28px;
+}
+
+.header nav ul {
+    list-style: none;
+    display: flex;
+    gap: 15px;
+    padding: 0;
+    margin: 0;
+}
+
+.header nav a {
+    color: white;
+    text-decoration: none;
+    font-weight: 500;
+    transition: 0.2s;
+}
+
+.header nav a:hover {
+    color: #ffcc00;
+}
+
+/* =========================
+   PROGRAMA ARCHIVO (IFRAME)
+========================= */
+.prgoramaArchivo {
+    max-width: 1200px;
+    margin: 25px auto;
+    padding: 20px;
+}
+
+.prgoramaArchivo h2 {
+    font-size: 28px;
+    margin-bottom: 15px;
+}
+
+/* Iframe del programa */
+.prgoramaArchivo iframe {
+    border: none;
+    border-radius: 8px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+}
+
+/* =========================
+   CARRUSEL
+========================= */
+.carruselPatrocinadores {
+    width: 100%;
+    overflow: hidden;
+    margin-top: 20px;
+}
+
+.carruselPatrocinadores img {
+    width: 100%;
+    display: block;
+}
+
+/* =========================
+   TABLA DE EVENTOS
+========================= */
+.tablaEventos {
+    max-width: 1200px;
+    margin: 40px auto;
+    padding: 20px;
+}
+
+.tablaEventos h2 {
+    margin-bottom: 15px;
+    font-size: 26px;
+}
+
+.tablaEventos table {
+    width: 100%;
+    border-collapse: collapse;
+    background: white;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+}
+
+.tablaEventos th {
+    background: #333;
+    color: white;
+    padding: 14px;
+    text-align: left;
+    font-size: 15px;
+}
+
+.tablaEventos td {
+    padding: 12px;
+    border-bottom: 1px solid #ddd;
+}
+
+.tablaEventos tr:hover {
+    background: #f0f0f0;
+}
+
+.tablaEventos tr:last-child td {
+    border-bottom: none;
+}
+
+/* =========================
+   FOOTER
+========================= */
+.footer {
+    text-align: center;
+    padding: 20px;
+    background: #222;
+    color: white;
+    margin-top: 40px;
+}

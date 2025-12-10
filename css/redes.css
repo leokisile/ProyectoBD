@@ -1,21 +1,22 @@
+/* ====== REGLAS GENERALES ====== */
 * {
     box-sizing: border-box;
     font-family: Arial, Helvetica, sans-serif;
 }
 
-/* ====== ESTILOS GENERALES ====== */
 body {
     margin: 0;
-    font-family: Arial, Helvetica, sans-serif;
     background: #f5f5f5;
     display: flex;
     flex-direction: column;
     min-height: 100vh;
+    padding-top: 100px; /* Para que el header fijo no tape contenido */
 }
 
 main {
-    flex: 1; /* ← esto empuja el footer hasta abajo */
+    flex: 1;
 }
+
 /* ====== HEADER FIJO ====== */
 .header {
     position: fixed;
@@ -50,14 +51,13 @@ main {
     font-weight: bold;
 }
 
-/* ====== ESPACIO PARA QUE EL CONTENIDO NO QUEDE OCULTO BAJO EL HEADER ====== */
-body {
-    padding-top: 100px;
+.header nav ul li a:hover {
+    text-decoration: underline;
 }
 
-/* ====== CONTENEDOR ====== */
+/* ====== CONTENEDOR PRINCIPAL ====== */
 .container {
-    max-width: 950px;
+    max-width: 900px;
     margin: auto;
     background: white;
     padding: 20px;
@@ -65,7 +65,12 @@ body {
     box-shadow: 0 4px 12px rgba(0,0,0,0.1);
 }
 
-/* ====== BOTÓN NUEVA ORGANIZACIÓN ====== */
+.container h1 {
+    margin-top: 0;
+    text-align: center;
+}
+
+/* ====== BOTÓN NUEVA RED ====== */
 .btn-add {
     background: #4CAF50;
     border: none;
@@ -74,16 +79,16 @@ body {
     border-radius: 8px;
     cursor: pointer;
     margin-bottom: 20px;
+    font-size: 16px;
 }
 
-/* ====== FILTROS ====== */
+/* ====== BUSCADOR ====== */
 .filters {
     display: flex;
     gap: 15px;
     margin-bottom: 20px;
 }
 
-.filters select,
 .filters input {
     padding: 10px;
     border: 1px solid #ccc;
@@ -112,7 +117,7 @@ tr:hover {
     background: #eef3ff;
 }
 
-/* ====== BOTONES TABLA ====== */
+/* ====== BOTONES DE ACCIÓN ====== */
 .btn-edit {
     background: #3498db;
     color: white;
@@ -170,16 +175,16 @@ tr:hover {
     background: white;
     padding: 25px;
     border-radius: 12px;
-    width: 350px;
+    width: 320px;
     display: flex;
     flex-direction: column;
     gap: 12px;
-    animation: fadein 0.25s;
+    animation: fadein .25s ease-in-out;
 }
 
 @keyframes fadein {
-    from {opacity: 0; transform: scale(0.9);}    
-    to {opacity: 1; transform: scale(1);}    
+    from { opacity: 0; transform: scale(0.9); }
+    to   { opacity: 1; transform: scale(1); }
 }
 
 .modal-content input {

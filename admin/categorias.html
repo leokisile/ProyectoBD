@@ -3,9 +3,9 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>CRUD Redes</title>
+<title>CRUD Categorias</title>
 
-<link rel="stylesheet" href="../css/redes.css">
+<link rel="stylesheet" href="../css/categorias.css">
 </head>
 <body>
 
@@ -25,14 +25,14 @@
     </div>
 
 <div class="container">
-    <h1>Gestión de Redes</h1>
+    <h1>Gestión de Categorias de eventos</h1>
 
     <!-- BOTÓN PARA ABRIR MODAL -->
-    <button class="btn-add" onclick="openModalNuevo()">➕ Nueva Red</button>
+    <button class="btn-add" onclick="openModalNuevo()">➕ Nueva Categoria</button>
 
     <!-- BUSCADOR + FILTROS -->
     <div class="filters">
-        <input type="text" id="search" placeholder="Buscar por red">
+        <input type="text" id="search" placeholder="Buscar por categoria">
     </div>
 
     <!-- TABLA -->
@@ -40,11 +40,11 @@
         <thead>
             <tr>
                 <th>ID</th>
-                <th>Red</th>
+                <th>Categoria</th>
                 <th>Acciones</th>
             </tr>
         </thead>
-        <tbody id="tblOrganizaciones"></tbody>
+        <tbody id="tblCategorias"></tbody>
     </table>
 
     <!-- PAGINACIÓN -->
@@ -57,9 +57,9 @@
 <!-- MODAL -->
 <div id="modal" class="modal">
     <div class="modal-content">
-        <h2 id="modalTitle">Nueva Sede</h2>
+        <h2 id="modalTitle">Nueva Categoria</h2>
 
-        <input id="red" type="text" placeholder="Nombre de la red social">
+        <input id="categoria" type="text" placeholder="Nombre de la categoria">
 
         <div class="modal-buttons">
             <button class="btn-primary" type="button" onclick="save()">Guardar</button>

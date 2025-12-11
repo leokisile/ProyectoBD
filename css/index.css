@@ -1,123 +1,191 @@
-/* Estilos generales */
-
-html, body {
-    height: 100%;
+/* ============================
+   RESET
+============================ */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
 }
 
 body {
-    margin: 0;
     font-family: Arial, Helvetica, sans-serif;
-    background-color: #f5f5f5;
-    display: flex;
-    flex-direction: column;
-    min-height: 100vh;
+    background: #f5f5f5;
+    color: #333;
 }
 
-main {
-    flex: 1; /* <- empuja el footer abajo */
-}
-
-/* ================= HEADER ================= */
+/* ============================
+   HEADER PRINCIPAL
+============================ */
 .header {
+    width: 100%;
+    background: #222;
+    padding: 15px 0;
+    color: #fff;
     position: sticky;
     top: 0;
-    background: #222;
-    color: white;
-    padding: 10px 20px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
     z-index: 100;
 }
 
-.header h1 {
-    margin: 0;
+.header-content {
+    width: 90%;
+    max-width: 1400px;
+    margin: auto;
+    display: flex;
+    align-items: center;
+    justify-content: center; /* centrado como la referencia */
 }
 
-.header nav ul {
+.header-content h2 {
+    font-size: 20px;
+    font-weight: normal;
+    letter-spacing: 1px;
+}
+
+/* ============================
+   MENÚ SECUNDARIO
+============================ */
+.main-menu {
+    width: 100%;
+    background: #fff;
+    padding: 15px 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 40px;
+    border-bottom: 1px solid #ddd;
+}
+
+.main-menu img {
+    height: 75px;
+    width: auto;
+}
+
+.main-menu ul {
     list-style: none;
     display: flex;
-    gap: 15px;
+    gap: 40px;
+    align-items: center;
 }
 
-.header nav a {
-    color: white;
+.main-menu ul li a {
+    color: #333;
     text-decoration: none;
+    font-size: 18px;
+    font-weight: bold;
 }
 
-.header nav a:hover,
-.header nav .activo {
-    color: #ffcc00;
-}
-/* ================= CARRUSELES ================= */
-.carruselInfo, .carruselPatrocinadores {
+/* ============================
+   CARRUSEL PRINCIPAL
+============================ */
+.carruselInfo {
     width: 100%;
+    height: 480px;
     overflow: hidden;
-    display: flex;
-    gap: 0;
-    margin: 20px 0;
+    position: relative;
+    border-radius: 12px;
+    margin: 25px 0;
 }
 
-.slide {
-    min-width: 100%;
-}
-
-.slide img {
-    width: 100%;
-    height: auto;
-    display: block;
-}
-
-/* ================= MAPA ================= */
-.mapa {
-    text-align: center;
-    margin: 40px 0;
-}
-
-.mapa h2 {
-    font-size: 28px;
-    margin-bottom: 20px;
-}
-
-.mapa img {
-    width: 70%;
-    border-radius: 10px;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.3);
-}
-
-/* ================= ALIADOS ================= */
-.carruselAliados {
-    margin: 40px 0;
-    text-align: center;
-    padding: 20px;
-}
-
-.carruselAliados h2 {
-    font-size: 28px;
-    margin-bottom: 20px;
-}
-
-.slideAliados {
-    display: inline-block;
-    margin: 10px;
-    width: 150px;
-    height: 150px;
-    overflow: hidden;
-    border-radius: 10px;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.2);
-}
-
-.slideAliados img {
+.carruselInfo img {
+    position: absolute;
     width: 100%;
     height: 100%;
     object-fit: cover;
+
+    opacity: 0;
+    transition: opacity 1.2s ease-in-out;
 }
 
-/* ================= FOOTER ================= */
+.carruselInfo img.active {
+    opacity: 1;
+}
+
+/* ============================
+   BANNERS PATROCINIO
+============================ */
+.bannerPatrocinio {
+    width: 100%;
+    margin: 25px 0;
+}
+
+.bannerPatrocinio img {
+    width: 100%;
+    height: 340px;
+    object-fit: cover;
+    border-radius: 12px;
+}
+
+/* ============================
+   MAPA
+============================ */
+.mapa {
+    text-align: center;
+    margin: 50px 0 60px;
+}
+
+.mapa h2 {
+    margin-bottom: 15px;
+    font-size: 2rem;
+}
+
+.mapa img {
+    width: 80%;
+    max-width: 1000px;
+    border-radius: 12px;
+}
+
+/* ============================
+   ALIADOS
+============================ */
+.aliados {
+    width: 100%;
+    background: #fff;
+    padding: 50px 0;
+}
+
+.aliados h2 {
+    text-align: center;
+    font-size: 2.3rem;
+    margin-bottom: 30px;
+}
+
+/* VIEWPORT que solo muestra 5 logos */
+.aliados-viewport {
+    width: 88%;
+    margin: auto;
+    overflow: hidden;
+}
+
+/* TRACK de logos */
+.aliados-track {
+    display: flex;
+    gap: 55px;      /* espacio entre logos */
+    padding: 25px 0;
+    align-items: center;
+}
+
+/* LOGOS MÁS GRANDES, VISIBLES Y UNIFORMES */
+.aliados-track img {
+    height: 180px;      /* mucho más grande */
+    width: auto;
+    flex-shrink: 0;
+    filter: drop-shadow(0px 0px 4px rgba(0,0,0,0.2));
+    transition: transform 0.4s ease;
+}
+
+/* EFECTO HOVER */
+.aliados-track img:hover {
+    transform: scale(1.12);
+}
+
+/* ============================
+   FOOTER
+============================ */
 .footer {
-    background-color: #1a1a1a;
-    color: white;
+    width: 100%;
+    background: #222;
+    color: #fff;
     text-align: center;
     padding: 20px 0;
-    margin-top: 40px;
+    margin-top: 30px;
 }

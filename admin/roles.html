@@ -3,9 +3,9 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>CRUD Redes</title>
+<title>CRUD Roles</title>
 
-<link rel="stylesheet" href="../css/redes.css">
+<link rel="stylesheet" href="../css/roles.css">
 </head>
 <body>
 
@@ -25,14 +25,14 @@
     </div>
 
 <div class="container">
-    <h1>Gestión de Redes</h1>
+    <h1>Gestión de Roles</h1>
 
     <!-- BOTÓN PARA ABRIR MODAL -->
-    <button class="btn-add" onclick="openModalNuevo()">➕ Nueva Red</button>
+    <button class="btn-add" onclick="openModalNuevo()">➕ Nuevo Rol</button>
 
     <!-- BUSCADOR + FILTROS -->
     <div class="filters">
-        <input type="text" id="search" placeholder="Buscar por red">
+        <input type="text" id="search" placeholder="Buscar por rol">
     </div>
 
     <!-- TABLA -->
@@ -40,11 +40,11 @@
         <thead>
             <tr>
                 <th>ID</th>
-                <th>Red</th>
+                <th>Rol</th>
                 <th>Acciones</th>
             </tr>
         </thead>
-        <tbody id="tblOrganizaciones"></tbody>
+        <tbody id="tblRoles"></tbody>
     </table>
 
     <!-- PAGINACIÓN -->
@@ -57,9 +57,9 @@
 <!-- MODAL -->
 <div id="modal" class="modal">
     <div class="modal-content">
-        <h2 id="modalTitle">Nueva Sede</h2>
+        <h2 id="modalTitle">Nuevo Rol</h2>
 
-        <input id="red" type="text" placeholder="Nombre de la red social">
+        <input id="rol" type="text" placeholder="Nombre del rol">
 
         <div class="modal-buttons">
             <button class="btn-primary" type="button" onclick="save()">Guardar</button>

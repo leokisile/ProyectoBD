@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CRUD Eventos</title>
+
+<link rel="stylesheet" href="../css/eventos.css">
+<script src="../scripts/eventos.js"></script>
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+
+    const modal = document.getElementById("modal");
+    const modalTitle = document.getElementById("modalTitle");
+
+    // ---- ABRIR MODAL NUEVO ----
+    window.openModalNuevo = function () {
+        modal.style.display = "flex";
+        modalTitle.textContent = "Nuevo Evento";
+    }
+
+    // ---- CERRAR MODAL ----
+    window.closeModal = function () {
+        modal.style.display = "none";
+    }
+});
+</script>
+<script>
+function agregarHorario() {
+    const cont = document.getElementById("horariosContainer");
+
+    const div = document.createElement("div");
+    div.className = "horario-item";
+
+    div.innerHTML = `
+        <input type="datetime-local" class="hora-inicio">
+        <input type="datetime-local" class="hora-fin">
+
+        <button type="button" class="btn-del-horario" onclick="this.parentNode.remove()">
+            ✖
+        </button>
+    `;
+
+    cont.appendChild(div);
+}
+</script>
+
+</head>
+<body>
+
+<!-- HEADER -->
+<div class="header" id="header">
+    <h1>FENAL</h1>
+    <nav>
+        <ul>
+            <li><a href="admin.html">Inicio</a></li>
+            <li><a href="organizaciones.html">Organizaciones</a></li>
+            <li><a href="sedes.html">Sedes</a></li>
+            <li><a href="personas.html">Personas</a></li>
+            <li><a href="eventos.html">Eventos</a></li>
+            <li><a href="estadisticas.html">Estadísticas</a></li>
+            <li><a href="libros.html">Libros</a></li>
+        </ul>
+    </nav>
+</div>
+
+<!-- CONTENEDOR -->
+<div class="container">
+    <h1>Gestión de Eventos</h1>
+
+    <!-- BOTÓN PARA ABRIR MODAL -->
+    <button class="btn-add" onclick="openModalNuevo()">➕ Nuevo Evento</button>
+
+    <!-- BUSCADOR -->
+    <div class="filters">
+        <input type="text" id="search" placeholder="Buscar por título">
+    </div>
+
+    <!-- TABLA -->
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Título</th>
+                <th>Sede</th>
+                <th>Tipo</th>
+                <th>Registro</th>
+                <th>Público</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody id="tblEventos"></tbody>
+    </table>
+
+    <!-- PAGINACIÓN -->
+    <div class="paginacion" id="paginacion"></div>
+</div>
+
+<!-- TOAST -->
+<div id="toast"></div>
+
+<!-- MODAL PRINCIPAL PARA EVENTOS -->
+<div id="modal" class="modal">
+    <div class="modal-content">
+        <h2 id="modalTitle">Nuevo Evento</h2>
+
+        <input id="titulo" type="text" placeholder="Título del evento">
+        <textarea id="sinopsis" placeholder="Sinopsis (200 caracteres)"></textarea>
+        <textarea id="descripcion" placeholder="Descripción completa"></textarea>
+        <textarea id="infoAd" placeholder="Información adicional"></textarea>
+
+        <input id="imagen" type="text" placeholder="Link de la imagen">
+
+        <!-- BOOLEANOS -->
+       <div class="checks">
+            <div class="check-row">
+                <span>Requiere registro</span>
+                <input type="checkbox" id="requiereRegistro">
+            </div>
+
+            <div class="check-row">
+                <span>Participa público</span>
+                <input type="checkbox" id="participaPublico">
+            </div>
+        </div>
+
+
+        <!-- SEDE -->
+        <select id="sedeSelect">
+            <option value="" disabled selected>Selecciona una sede</option>
+        </select>
+
+        <!-- TIPO DE EVENTO -->
+        <select id="tipoEventoSelect" onchange="mostrarSubcampos()">
+            <option value="" disabled selected>Selecciona un tipo de evento</option>
+        </select>
+
+        <!-- SUBTIPOS -->
+
+        <!-- Presentación Editorial -->
+        <div id="subEditorial" class="subtipo" style="display:none;">
+            <h3>Presentación Editorial</h3>
+            <label>Seleccionar libro relacionado:</label>
+            <select id="libroSelect">
+                <option value="" disabled selected>Selecciona un libro</option>
+            </select>
+        </div>
+
+        <!-- Evento Musical -->
+        <div id="subMusical" class="subtipo" style="display:none;">
+            <h3>Evento Musical</h3>
+            <textarea id="setlist" placeholder="Setlist del evento"></textarea>
+        </div>
+
+        <!-- Taller -->
+        <div id="subTaller" class="subtipo" style="display:none;">
+            <h3>Taller</h3>
+            <textarea id="materiales" placeholder="Materiales necesarios"></textarea>
+            <input id="rangoEdad" type="text" placeholder="Rango de edad (ej. 7-12)">
+        </div>
+
+        <!-- Premiación -->
+        <div id="subPremiacion" class="subtipo" style="display:none;">
+            <h3>Premiación</h3>
+            <input id="premio" type="text" placeholder="Premio otorgado">
+        </div>
+
+        <!-- ORGANIZACIONES -->
+        <h3>Organizaciones Participantes</h3>
+        <select id="orgSelect">
+            <option value="" disabled selected>Selecciona una organización</option>
+        </select>
+
+        <!-- HORARIOS -->
+        <!-- HORARIOS -->
+        <h3>Horarios</h3>
+
+        <div id="horariosContainer" class="horarios-list"></div>
+
+        <button type="button" class="btn-add-horario" onclick="agregarHorario()">
+         ➕ Agregar horario
+        </button>
+
+
+        <div class="modal-buttons">
+            <button class="btn-primary" type="button" onclick="save()">Guardar</button>
+            <button class="btn-danger" type="button" onclick="closeModal()">Cancelar</button>
+        </div>
+    </div>
+</div>
+
+<!-- FOOTER -->
+<div class="footer">
+    <p>&copy; 2024 FENAL. Todos los derechos reservados.</p>
+</div>
+
+<script src="../scripts/eventosScript.js"></script>
+
+</body>
+</html>

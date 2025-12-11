@@ -4,62 +4,85 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>FENAL</title>
+
+    <!-- CSS -->
     <link rel="stylesheet" href="../css/index.css">
 </head>
 
 <body>
-    <div class="header" id="header">
-        <h1>FENAL</h1> <!--Aqui usan una imagen en vez de texto-->
-        <nav>
+
+    <!-- HEADER -->
+    <header class="header">
+        <div class="header-content">
+            <h2>INSTITUTO CULTURAL DE LEÓN</h2>
+            </nav>
+        </div>
+    </header>
+
+    <main>
+
+        <!-- MENÚ SECUNDARIO -->
+        <nav class="main-menu">
+            <img src="../resources/fenal-logo.png">
             <ul>
-                <li><a href="index.html">Inicio</a></li>
-                <li><a href="progGeneral.html">Programa General</a></li>
-                <li><a href="progEditorial.html">Programa Editorial</a></li>
-                <li><a href="progArtistico.html">Programa Artistico</a></li>
-                <li><a href="talleres.html">Talleres</a></li>
-                <li><a href="participantes.html">Participantes</a></li>
+                <li><a href="progGeneral.html">Programa general</a></li>
+                <li><a href="progEditorial.html">Programa editorial ▾</a></li>
+                <li><a href="progArtistico.html">Programa artístico ▾</a></li>
+                <li><a href="talleres.html">Talleres ▾</a></li>
+                <li><a href="salaPrensa.html">Sala de prensa</a></li>
                 <li><a href="nosotros.html">Nosotros</a></li>
             </ul>
         </nav>
-    </div>
-<main>
-    <div class="carruselInfo">
-        <div class="slide">
-            <img src="images/slide1.jpg" alt="Slide 1">
-        </div>
-        <div class="slide">
-            <img src="images/slide2.jpg" alt="Slide 2">
-        </div>
-    </div>
 
-    <div class="carruselPatrocinadores">
-        <div class="slide">
-            <img src="images/slide1.jpg" alt="Slide 1">
-        </div>
-        <div class="slide">
-            <img src="images/slide2.jpg" alt="Slide 2">
-        </div>
-    </div>
+        <!-- CARRUSEL PRINCIPAL -->
+        <section class="carruselInfo">
+            <img src="../resources/slide1.jpeg" class="active">
+            <img src="../resources/slide2.jpeg">
+        </section>
 
-    <div class="mapa">
-        <h2>Ubicación del Evento</h2>
-        <img src="images/mapa.jpg" alt="Mapa de Ubicación">
-    </div>
+        <!-- CARRUSEL DE PATROCINADORES (banner grande) -->
+        <section class="bannerPatrocinio">
+            <img src="../resources/slide3.jpeg">
+        </section>
 
-    <div class="carruselAliados">
-        <h2>Aliados Fenal</h2>
-        <div class="slideAliados">
-            <img src="images/aliado1.jpg" alt="Aliado 1">
+        <!-- MAPA -->
+        <div class="mapa">
+            <h2>Ubicación del Evento</h2>
+            <img src="../resources/mapaFenal.png" alt="Mapa de Ubicación">
         </div>
-        <div class="slideAliados">
-            <img src="images/aliado2.jpg" alt="Aliado 2">
-        </div>
-        <div class="slideAliados">
-            <img src="images/aliado3.jpg" alt="Aliado 3">
-        </div>
-    </div>
-</main>
-    <div class="footer">
+
+        <!-- CARRUSEL DE ALIADOS -->
+        <section class="aliados">
+            <h2>Aliados Fenal</h2>
+            <div class="aliados-viewport">
+            <div class="aliados-track">
+                <img src="../resources/aliado1.png">
+                <img src="../resources/aliado2.png">
+                <img src="../resources/aliado3.png">
+                <img src="../resources/aliado4.png">
+                <img src="../resources/aliado5.png">
+                <img src="../resources/aliado6.png">
+                <img src="../resources/aliado7.png">
+                <img src="../resources/aliado8.png">
+                <img src="../resources/aliado9.png">
+                <img src="../resources/aliado10.png">
+            </div>
+            </div>
+        </section>
+
+        <!-- CARRUSEL DE PATROCINADORES (banner grande) -->
+        <section class="bannerPatrocinio">
+            <img src="../resources/slide5.jpeg">
+        </section>
+
+    </main>
+
+    <footer class="footer">
         <p>&copy; 2024 FENAL. Todos los derechos reservados.</p>
-    </div>
+    </footer>
+
+    <!-- JS -->
+    <script src="../scripts/carrusel.js"></script>
+</body>
 </html>
+

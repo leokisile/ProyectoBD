@@ -36,41 +36,7 @@
     </div>
 
     <!-- FICHERO (Tarjetas en lugar de tabla) -->
-<div class="fichero">
-
-    <!-- ===== MOLDE DE FICHA ===== -->
-    <div class="ficha">
-        <img src="../resources/libro.png" alt="Foto">
-        <div class="info">
-            <h3>ID: 1</h3>
-            <p>Titulo 1</p>
-            <p>Sinopsis cortada</p>
-            <p>Autor 1</p>
-            <p>Editorial 1</p>
-        </div>
-    </div>
-
-    <div class="ficha">
-        <img src="../resources/libro.png" alt="Foto">
-        <div class="info">
-            <h3>ID: 2</h3>
-            <p>Titulo 2</p>
-            <p>Sinopsis cortada</p>
-            <p>Autor 2</p>
-            <p>Editorial 2</p>
-        </div>
-    </div>
-
-    <div class="ficha">
-        <img src="../resources/libro.png" alt="Foto">
-        <div class="info">
-            <h3>ID: 3</h3>
-            <p>Titulo 3</p>
-            <p>Sinopsis cortada</p>
-            <p>Autor 3</p>
-            <p>Editorial 3</p>
-        </div>
-    </div>
+<div class="fichero" id="fichero">
 
 </div>
 
@@ -84,7 +50,7 @@
 <!-- MODAL para libro -->
 <div id="modalLibro" class="modal">
     <div class="modal-content">
-        <h2>Vincular red al participante</h2>
+        <h2 id="modalTitle">Nuevo Libro</h2>
 
         <input id="tituloLibro" type="text" placeholder="Titulo del libro">
         <input id="sinopsisLibro" type="text" placeholder="Sinopsis del libro">
@@ -105,7 +71,7 @@
         </select>
 
         <div class="modal-buttons">
-            <button class="btn-primary" type="button" onclick="saveRed()">Guardar</button>
+            <button class="btn-primary" type="button" onclick="saveLibro()">Guardar</button>
             <button class="btn-danger" type="button" onclick="closeModal('modalRed')">Cancelar</button>
         </div>
     </div>
@@ -114,7 +80,7 @@
     <div class="footer">
         <p>&copy; 2024 FENAL. Todos los derechos reservados.</p>
     </div>
-<script src="../scripts/orgScript.js"></script>
+<script src="../scripts/libros.js"></script>
 
 </body>
 

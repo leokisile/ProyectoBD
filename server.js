@@ -38,5 +38,8 @@ db.then(() => {
     const eventosRoutes = require("./routes/eventosRoutes.js");
     app.use("/api/eventos", eventosRoutes);
 
+    const librosRoutes = require("./routes/librosRoutes.js");
+    app.use("/api/libros", librosRoutes);
+
     app.listen(3000, () => console.log("🚀 Servidor funcionando en puerto 3000"));
 });

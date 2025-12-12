@@ -180,8 +180,8 @@ function renderFichas() {
         <div class="ficha">
             <img src="${avatar}" alt="Foto">
             <div class="info">
-                <h3>ID: ${p.idPersona}</h3>
-                <p>${escapeHtml(p.nombre)}</p>
+                <h3>${escapeHtml(p.nombre)}</h3>
+                <p>ID: ${p.idPersona}</p>
             </div>
             <div class="ficha-actions">
                 <button class="btn-edit" onclick="openModalEditarParticipante(${p.idPersona})">✏️</button>

@@ -10,7 +10,7 @@
 <body>
 
     <div class="header" id="header">
-        <h1>FENAL</h1> <!--Aqui usan una imagen en vez de texto-->
+        <h1>FENAL</h1>
         <nav>
             <ul>
                 <li><a href="admin.html">Inicio</a></li>
@@ -19,7 +19,7 @@
                 <li><a href="personas.html">Personas</a></li>
                 <li><a href="eventos.html">Eventos</a></li>
                 <li><a href="estadisticas.html">Estadisticas</a></li>
-                <li><a href="libros.html">Libros</a></li><!--Tipo de espacios, redes, tipo de eventos, roles-->
+                <li><a href="libros.html">Libros</a></li>
             </ul>
         </nav>
     </div>
@@ -28,7 +28,7 @@
     <h1>Gestión de Participantes</h1>
 
     <!-- BOTÓN PARA ABRIR MODAL -->
-    <button class="btn-add" onclick="openModal('modalParticipante')">➕ Nuevo Participante</button>
+    <button class="btn-add" onclick="openModalParticipante()">➕ Nuevo Participante</button>
 
     <!-- BUSCADOR + FILTROS -->
     <div class="filters">
@@ -36,34 +36,7 @@
     </div>
 
     <!-- FICHERO (Tarjetas en lugar de tabla) -->
-<div class="fichero">
-
-    <!-- ===== MOLDE DE FICHA ===== -->
-    <div class="ficha" onclick="openModal('modalRed')">
-        <img src="../resources/user.png" alt="Foto">
-        <div class="info">
-            <h3>ID: 1</h3>
-            <p>Juan Pérez</p>
-        </div>
-    </div>
-
-    <div class="ficha">
-        <img src="../resources/user.png" alt="Foto">
-        <div class="info">
-            <h3>ID: 2</h3>
-            <p>María López</p>
-        </div>
-    </div>
-
-    <div class="ficha">
-        <img src="../resources/user.png" alt="Foto">
-        <div class="info">
-            <h3>ID: 3</h3>
-            <p>Carlos Gómez</p>
-        </div>
-    </div>
-
-</div>
+    <div class="fichero" id="fichero"></div>
 
     <!-- PAGINACIÓN -->
     <div class="paginacion" id="paginacion"></div>
@@ -72,39 +45,49 @@
 <!-- TOAST -->
 <div id="toast"></div>
 
-<!-- MODAL 1: Nuevo Participante -->
+<!-- MODAL 1: Nuevo / Editar Participante -->
 <div id="modalParticipante" class="modal">
     <div class="modal-content">
-        <h2>Nuevo Participante</h2>
+        <h2 id="modalTitleParticipante">Nuevo Participante</h2>
 
         <input id="nombre" type="text" placeholder="Nombre del participante">
         <input id="biografia" type="text" placeholder="Biografía">
         <input id="img" type="text" placeholder="Link de la imagen">
 
+        <!-- Redes asociadas -->
+        <div class="redes-asociadas">
+            <h3>Redes asociadas</h3>
+            <div id="listaRedesPersona">
+                <!-- Aquí se inyectan las filas: cada fila con editar/eliminar -->
+                <p class="nothing">No hay redes asociadas</p>
+            </div>
+
+            <div class="modal-buttons redes-actions">
+                <button class="btn-primary" type="button" onclick="openModalRedAgregar()">➕ Agregar red</button>
+            </div>
+        </div>
+
         <div class="modal-buttons">
             <button class="btn-primary" type="button" onclick="saveParticipante()">Guardar</button>
-            <button class="btn-danger" type="button" onclick="closeModal('modalParticipante')">Cancelar</button>
+            <button class="btn-danger" type="button" onclick="closeModalParticipante()">Cancelar</button>
         </div>
     </div>
 </div>
 
-<!-- MODAL 2: Vincular red -->
+<!-- MODAL 2: Agregar / Editar Relación Red-Persona -->
 <div id="modalRed" class="modal">
     <div class="modal-content">
-        <h2>Vincular red al participante</h2>
+        <h2 id="modalTitleRed">Vincular red</h2>
 
         <select id="redSelect">
             <option value="" disabled selected>Selecciona una red</option>
-            <option value="org1">Red 1</option>
-            <option value="org2">Red 2</option>
-            <option value="org3">Red 3</option>
         </select>
 
-        <input id="usuarioRed" type="text" placeholder="@Nombre de usuario">
+        <input id="usuarioRed" type="text" placeholder="@Nombre de usuario / enlace">
 
         <div class="modal-buttons">
-            <button class="btn-primary" type="button" onclick="saveRed()">Guardar</button>
-            <button class="btn-danger" type="button" onclick="closeModal('modalRed')">Cancelar</button>
+            <button class="btn-primary" type="button" onclick="saveRedRelacion()">Guardar</button>
+            <button class="btn-danger" type="button" onclick="closeModalRed()">Cancelar</button>
         </div>
     </div>
 </div>
@@ -112,18 +95,7 @@
     <div class="footer">
         <p>&copy; 2024 FENAL. Todos los derechos reservados.</p>
     </div>
-<script src="../scripts/orgScript.js"></script>
+<script src="../scripts/personas.js"></script>
 
 </body>
-
-<script>
-    function openModal(id) {
-    document.getElementById(id).style.display = "flex";
-}
-
-function closeModal(id) {
-    document.getElementById(id).style.display = "none";
-}
-
-</script>
 </html>

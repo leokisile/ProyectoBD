@@ -29,5 +29,14 @@ db.then(() => {
     const categoriasRoutes = require("./routes/categoriasRoutes.js");
     app.use("/api/categorias", categoriasRoutes);
 
+    const personasRoutes = require("./routes/personasRoutes.js");
+    app.use("/api/personas", personasRoutes);
+
+    const redespersonasRoutes = require("./routes/redespersonasRoutes.js");
+    app.use("/api/redespersonas", redespersonasRoutes);
+
+    const eventosRoutes = require("./routes/eventosRoutes.js");
+    app.use("/api/eventos", eventosRoutes);
+
     app.listen(3000, () => console.log("🚀 Servidor funcionando en puerto 3000"));
 });

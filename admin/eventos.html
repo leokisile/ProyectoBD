@@ -6,45 +6,6 @@
 <title>CRUD Eventos</title>
 
 <link rel="stylesheet" href="../css/eventos.css">
-<script src="../scripts/eventos.js"></script>
-<script>
-document.addEventListener("DOMContentLoaded", () => {
-
-    const modal = document.getElementById("modal");
-    const modalTitle = document.getElementById("modalTitle");
-
-    // ---- ABRIR MODAL NUEVO ----
-    window.openModalNuevo = function () {
-        modal.style.display = "flex";
-        modalTitle.textContent = "Nuevo Evento";
-    }
-
-    // ---- CERRAR MODAL ----
-    window.closeModal = function () {
-        modal.style.display = "none";
-    }
-});
-</script>
-<script>
-function agregarHorario() {
-    const cont = document.getElementById("horariosContainer");
-
-    const div = document.createElement("div");
-    div.className = "horario-item";
-
-    div.innerHTML = `
-        <input type="datetime-local" class="hora-inicio">
-        <input type="datetime-local" class="hora-fin">
-
-        <button type="button" class="btn-del-horario" onclick="this.parentNode.remove()">
-            ✖
-        </button>
-    `;
-
-    cont.appendChild(div);
-}
-</script>
-
 </head>
 <body>
 
@@ -72,9 +33,19 @@ function agregarHorario() {
     <button class="btn-add" onclick="openModalNuevo()">➕ Nuevo Evento</button>
 
     <!-- BUSCADOR -->
+    <!-- FILTROS -->
     <div class="filters">
         <input type="text" id="search" placeholder="Buscar por título">
+
+        <select id="filterSede">
+            <option value="">Todas las sedes</option>
+        </select>
+
+        <select id="filterTipo">
+            <option value="">Todos los tipos</option>
+        </select>
     </div>
+
 
     <!-- TABLA -->
     <table>
@@ -85,7 +56,7 @@ function agregarHorario() {
                 <th>Sede</th>
                 <th>Tipo</th>
                 <th>Registro</th>
-                <th>Público</th>
+                <th>Participación</th>
                 <th>Acciones</th>
             </tr>
         </thead>
@@ -126,12 +97,12 @@ function agregarHorario() {
 
 
         <!-- SEDE -->
-        <select id="sedeSelect">
+        <select id="sedeSelectModal">
             <option value="" disabled selected>Selecciona una sede</option>
         </select>
 
         <!-- TIPO DE EVENTO -->
-        <select id="tipoEventoSelect" onchange="mostrarSubcampos()">
+        <select id="tipoEventoSelectModal" onchange="mostrarSubcampos()">
             <option value="" disabled selected>Selecciona un tipo de evento</option>
         </select>
 
@@ -172,7 +143,6 @@ function agregarHorario() {
         </select>
 
         <!-- HORARIOS -->
-        <!-- HORARIOS -->
         <h3>Horarios</h3>
 
         <div id="horariosContainer" class="horarios-list"></div>
@@ -194,7 +164,7 @@ function agregarHorario() {
     <p>&copy; 2024 FENAL. Todos los derechos reservados.</p>
 </div>
 
-<script src="../scripts/eventosScript.js"></script>
+<script src="../scripts/eventos.js"></script>
 
 </body>
 </html>

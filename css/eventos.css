@@ -93,6 +93,7 @@ main {
     margin-bottom: 20px;
 }
 
+.filters select,
 .filters input {
     padding: 10px;
     border: 1px solid #ccc;

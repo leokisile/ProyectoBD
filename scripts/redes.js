@@ -1,27 +1,19 @@
 // ======= CONFIG =======
-const API = "http://localhost:3000/api/organizaciones";
+const API = "http://localhost:3000/api/redes";
 
-let usuarios = [];
+let redes = [];
 let paginaActual = 1;
 const porPagina = 5;
 
 let editandoId = null; // <- Para saber si es edición o registro nuevo
 
 // ======= ELEMENTOS =======
-const tablaBody = document.getElementById("tblOrganizaciones");
+const tablaBody = document.getElementById("tblRedes");
 const searchInput = document.getElementById("search");
-const filtroPais = document.getElementById("filterPais");
-const filtroEstado = document.getElementById("filterEstado");
 
 // Campos del modal
-const inputNombre = document.getElementById("nombre");
-const inputTel = document.getElementById("tel");
-const inputCorreo = document.getElementById("correo");
-const inputPagina = document.getElementById("pagina");
-const inputPais = document.getElementById("pais");
-const inputEstado = document.getElementById("estado");
-const inputCiudad = document.getElementById("ciudad");
 const modalTitle = document.getElementById("modalTitle");
+const inputNombre = document.getElementById("red");
 
 // ======= TOAST =======
 function toast(msj, tipo = "success") {
@@ -48,14 +40,11 @@ function toast(msj, tipo = "success") {
 }
 
 // ======= CARGAR DATOS =======
-async function cargarUsuarios() {
+async function cargarRedes() {
     try {
         const res = await fetch(API);
-        usuarios = await res.json();
+        redes = await res.json();
 
-        generarMapaPaisEstado();
-        llenarFiltroPais();
-        actualizarFiltroEstado();
         renderTabla();
     } catch (e) {
         toast("Error al cargar datos", "error");
@@ -65,35 +54,24 @@ async function cargarUsuarios() {
 // ======= RENDER TABLA =======
 function renderTabla() {
     const busqueda = searchInput.value.toLowerCase();
-    const paisSel = filtroPais.value;
-    const estadoSel = filtroEstado.value;
 
-    let filtrados = usuarios.filter(u =>
-        u.nombre.toLowerCase().includes(busqueda) ||
-        u.correo.toLowerCase().includes(busqueda)
+    let filtrados = redes.filter(r =>
+        r.red.toLowerCase().includes(busqueda)
     );
-
-    if (paisSel) filtrados = filtrados.filter(u => u.pais === paisSel);
-    if (estadoSel) filtrados = filtrados.filter(u => u.estado === estadoSel);
 
     const inicio = (paginaActual - 1) * porPagina;
     const paginados = filtrados.slice(inicio, inicio + porPagina);
 
     tablaBody.innerHTML = "";
 
-    paginados.forEach(u => {
+    paginados.forEach(r => {
         tablaBody.innerHTML += `
             <tr>
-                <td>${u.idOrganizacion}</td>
-                <td>${u.nombre}</td>
-                <td>${u.tel}</td>
-                <td>${u.correo}</td>
-                <td>${u.pais}</td>
-                <td>${u.estado}</td>
-                <td>${u.ciudad}</td>
+                <td>${r.idRed}</td>
+                <td>${r.red}</td>
                 <td>
-                    <button class="btn-edit" onclick="editar(${u.idOrganizacion})">✏️</button>
-                    <button class="btn-delete" onclick="eliminar(${u.idOrganizacion})">🗑️</button>
+                    <button class="btn-edit" onclick="editar(${r.idRed})">✏️</button>
+                    <button class="btn-delete" onclick="eliminar(${r.idRed})">🗑️</button>
                 </td>
             </tr>
         `;
@@ -109,27 +87,21 @@ function renderTabla() {
 // 👉 ABRIR MODAL PARA NUEVO
 function openModalNuevo() {
     editandoId = null;
-    modalTitle.textContent = "Nueva Organización";
+    modalTitle.textContent = "Nueva Red";
     limpiarModal();
     document.getElementById("modal").style.display = "flex";
 }
 
 // 👉 ABRIR MODAL PARA EDITAR
 function editar(id) {
-    const u = usuarios.find(x => x.idOrganizacion === id);
+    const u = redes.find(x => x.idRed === id);
 
     if (!u) return;
 
     editandoId = id;
-    modalTitle.textContent = "Editar Organización";
+    modalTitle.textContent = "Editar Red";
 
-    inputNombre.value = u.nombre;
-    inputTel.value = u.tel;
-    inputCorreo.value = u.correo;
-    inputPagina.value = u.pagina || "";
-    inputPais.value = u.pais;
-    inputEstado.value = u.estado;
-    inputCiudad.value = u.ciudad;
+    inputNombre.value = u.red;
 
     document.getElementById("modal").style.display = "flex";
 }
@@ -137,21 +109,15 @@ function editar(id) {
 // 👉 LIMPIAR CAMPOS
 function limpiarModal() {
     inputNombre.value = "";
-    inputTel.value = "";
-    inputCorreo.value = "";
-    inputPagina.value = "";
-    inputPais.value = "";
-    inputEstado.value = "";
-    inputCiudad.value = "";
 }
-// Funciones de apertura/cierre del modal (poner en orgScript.js)
+// Funciones de apertura/cierre del modal 
 function openModalNuevo() {
     // Si usas la variable editandoId desde el script principal, la reseteamos
     if (typeof editandoId !== "undefined") editandoId = null;
 
     const modal = document.getElementById("modal");
     const title = document.getElementById("modalTitle");
-    if (title) title.textContent = "Nueva Organización";
+    if (title) title.textContent = "Nueva Red";
 
     // Limpiar inputs si existe la función
     if (typeof limpiarModal === "function") limpiarModal();
@@ -168,17 +134,10 @@ function closeModal() {
 // 👉 GUARDAR (crear o modificar)
 async function save() {
     const data = {
-        nombre: inputNombre.value.trim(),
-        tel: inputTel.value.trim(),
-        correo: inputCorreo.value.trim(),
-        pagina: inputPagina.value.trim(),
-        pais: inputPais.value.trim(),
-        estado: inputEstado.value.trim(),
-        ciudad: inputCiudad.value.trim()
+        red: inputNombre.value.trim(),
     };
 
-    if (!data.nombre) return toast("El nombre es obligatorio", "error");
-    if (!data.correo.includes("@")) return toast("Correo inválido", "error");
+    if (!data.red) return toast("El nombre de la red es obligatorio", "error");
 
     try {
         let res;
@@ -210,15 +169,15 @@ async function save() {
         }
 
         closeModal();
-        cargarUsuarios();
+        cargarRedes();
     } catch (e) {
-        toast("Error al guardar", "error");
+        //toast("Error al guardar", "error");
     }
 }
 
 // 👉 ELIMINAR
 async function eliminar(id) {
-    if (!confirm("¿Seguro que deseas eliminar esta organización?")) return;
+    if (!confirm("¿Seguro que deseas eliminar esta red?")) return;
 
     try {
         const res = await fetch(`${API}/${id}`, {
@@ -227,40 +186,10 @@ async function eliminar(id) {
 
         const msg = await res.json();
         toast(msg.mensaje);
-        cargarUsuarios();
+        cargarRedes();
     } catch (e) {
         toast("Error al eliminar", "error");
     }
-}
-
-// ===========================================================
-// ===================== FILTROS DINÁMICOS ===================
-// ===========================================================
-
-let mapaPaisEstados = {};
-
-function generarMapaPaisEstado() {
-    mapaPaisEstados = {};
-    usuarios.forEach(u => {
-        if (!mapaPaisEstados[u.pais]) mapaPaisEstados[u.pais] = new Set();
-        mapaPaisEstados[u.pais].add(u.estado);
-    });
-}
-
-function llenarFiltroPais() {
-    filtroPais.innerHTML = '<option value="">Todos</option>';
-    Object.keys(mapaPaisEstados).forEach(pais => {
-        filtroPais.innerHTML += `<option value="${pais}">${pais}</option>`;
-    });
-}
-
-function actualizarFiltroEstado() {
-    const paisSel = filtroPais.value;
-    filtroEstado.innerHTML = '<option value="">Todos</option>';
-    if (!paisSel) return;
-    mapaPaisEstados[paisSel].forEach(estado => {
-        filtroEstado.innerHTML += `<option value="${estado}">${estado}</option>`;
-    });
 }
 
 // ===========================================================
@@ -284,16 +213,5 @@ function cambiarPagina(delta) {
 // ======= LISTENERS =======
 searchInput.addEventListener("input", () => { paginaActual = 1; renderTabla(); });
 
-filtroPais.addEventListener("change", () => {
-    actualizarFiltroEstado();
-    paginaActual = 1;
-    renderTabla();
-});
-
-filtroEstado.addEventListener("change", () => {
-    paginaActual = 1;
-    renderTabla();
-});
-
 // ======= INICIO =======
-cargarUsuarios();
+cargarRedes();

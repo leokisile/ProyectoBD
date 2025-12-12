@@ -52,7 +52,7 @@ CREATE TABLE redesPersonas(
 
 CREATE TABLE tipoEventos(
 	idTipoEvento int auto_increment primary key,
-    tipoEvento varchar(60)
+    tipoEvento varchar(60) UNIQUE
 );
 
 CREATE TABLE eventos(

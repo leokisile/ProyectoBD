@@ -1,209 +1,167 @@
-// ===============================
-// CONFIG
-// ===============================
-const API = "http://localhost:3000/api/eventos";
-let eventos = [];
-let paginaActual = 1;
-const porPagina = 5;
-let editId = null; // Para edición
+const API = "http://localhost:3000/api";
 
 // ===============================
 // ELEMENTOS DOM
 // ===============================
 const tablaBody = document.getElementById("tblEventos");
-const searchInput = document.getElementById("search");
-const sedeFilter = document.getElementById("filterSede");
-const tipoFilter = document.getElementById("filterTipo");
+const modal = document.getElementById("modal");
 const modalTitle = document.getElementById("modalTitle");
 
-// Campos modal
+const searchInput = document.getElementById("search");
+const filterSede = document.getElementById("filterSede");
+const filterTipo = document.getElementById("filterTipo");
+
 const inputTitulo = document.getElementById("titulo");
 const inputSinopsis = document.getElementById("sinopsis");
 const inputDescripcion = document.getElementById("descripcion");
 const inputInfoAd = document.getElementById("infoAd");
 const inputImagen = document.getElementById("imagen");
+
 const checkRegistro = document.getElementById("requiereRegistro");
 const checkPublico = document.getElementById("participaPublico");
+
 const sedeModal = document.getElementById("sedeSelectModal");
 const tipoEventoModal = document.getElementById("tipoEventoSelectModal");
+
 const horariosContainer = document.getElementById("horariosContainer");
+const orgContainer = document.getElementById("orgSelect");
+const personasContainer = document.getElementById("personasContainer");
+
+const subMusical = document.getElementById("subMusical");
+const subTaller = document.getElementById("subTaller");
+const subPremiacion = document.getElementById("subPremiacion");
+const subEditorial = document.getElementById("subEditorial");
+const inputSetlist = document.getElementById("setlist");
+const inputMateriales = document.getElementById("materiales");
+const inputRangoEdad = document.getElementById("rangoEdad");
+const inputPremio = document.getElementById("premio");
+const libroSelect = document.getElementById("libroSelect");
+
+let eventos = [];
+let editandoId = null;
 
 // ===============================
-// TOAST
+// INIT
 // ===============================
-function toast(msj, tipo = "success") {
-    const t = document.createElement("div");
-    t.className = "toast " + tipo;
-    t.textContent = msj;
-    Object.assign(t.style, {
-        position: "fixed",
-        top: "20px",
-        right: "20px",
-        padding: "10px 15px",
-        background: tipo === "success" ? "#4CAF50" : "#e74c3c",
-        color: "white",
-        borderRadius: "8px",
-        boxShadow: "0 4px 10px rgba(0,0,0,0.2)",
-        zIndex: 9999,
-        opacity: 0,
-        transition: "opacity .3s"
-    });
-    document.body.appendChild(t);
-    setTimeout(() => t.style.opacity = 1, 10);
-    setTimeout(() => t.style.opacity = 0, 2500);
-    setTimeout(() => t.remove(), 3000);
-}
-
-// ===============================
-// CARGAR DATOS INICIALES
-// ===============================
-async function init() {
+document.addEventListener("DOMContentLoaded", async () => {
     await cargarEventos();
-    llenarFiltros();
-}
+    await cargarSedes();
+    await cargarTiposEvento();
+    await cargarOrganizaciones();
+    await cargarPersonas();
 
+    
+});
+    searchInput.addEventListener("input", aplicarFiltros);
+    filterSede.addEventListener("change", aplicarFiltros);
+    filterTipo.addEventListener("change", aplicarFiltros);
 // ===============================
-// CARGAR EVENTOS
+// CARGA DATOS
 // ===============================
 async function cargarEventos() {
-    try {
-        const res = await fetch(API);
-        eventos = await res.json();
-        renderTabla();
-    } catch (e) {
-        console.error(e);
-        toast("Error al cargar eventos", "error");
-    }
+    const res = await fetch(`${API}/eventos`);
+    eventos = await res.json();
+    renderTabla(eventos);
+}
+
+async function cargarSedes() {
+    const res = await fetch(`${API}/sedes`);
+    const sedes = await res.json();
+    sedeModal.innerHTML = "<option value=''>Selecciona una sede</option>";
+    filterSede.innerHTML = "<option value=''>Todas las sedes</option>";
+    sedes.forEach(s => {
+        sedeModal.innerHTML += `<option value="${s.idSede}">${s.nombre}</option>`;
+        filterSede.innerHTML += `<option value="${s.idSede}">${s.nombre}</option>`;
+    });
+}
+
+async function cargarTiposEvento() {
+    const res = await fetch(`${API}/categorias`);
+    const tipos = await res.json();
+    tipoEventoModal.innerHTML = "<option value=''>Selecciona un tipo de evento</option>";
+    filterTipo.innerHTML = "<option value=''>Todos los tipos</option>";
+    tipos.forEach(t => {
+        tipoEventoModal.innerHTML += `<option value="${t.idTipoEvento}">${t.tipoEvento}</option>`;
+        filterTipo.innerHTML += `<option value="${t.idTipoEvento}">${t.tipoEvento}</option>`;
+    });
+}
+
+async function cargarOrganizaciones() {
+    const res = await fetch(`${API}/organizaciones`);
+    const orgs = await res.json();
+    orgContainer.innerHTML = "";
+    orgs.forEach(o => {
+        orgContainer.innerHTML += `<option value="${o.idOrganizacion}">${o.nombre}</option>`;
+    });
+}
+
+async function cargarPersonas() {
+    const res = await fetch(`${API}/personas`);
+    const personas = await res.json();
+    personasContainer.innerHTML = "";
+    personas.forEach(p => {
+        const div = document.createElement("div");
+        div.innerHTML = `<label><input type="checkbox" class="personaCheckbox" value="${p.idPersona}"> ${p.nombre}</label>`;
+        personasContainer.appendChild(div);
+    });
 }
 
 // ===============================
-// RENDER TABLA CON FILTROS Y PAGINACIÓN
+// TABLA
 // ===============================
-function renderTabla() {
-    const busqueda = searchInput.value.toLowerCase();
-    const filtroS = sedeFilter.value;
-    const filtroT = tipoFilter.value;
-
-    let filtrados = eventos.filter(e =>
-        e.titulo.toLowerCase().includes(busqueda) &&
-        (filtroS === "" || e.idSede == filtroS) &&
-        (filtroT === "" || e.idTipoEvento == filtroT)
-    );
-
-    const inicio = (paginaActual - 1) * porPagina;
-    const paginados = filtrados.slice(inicio, inicio + porPagina);
-
+function renderTabla(lista) {
     tablaBody.innerHTML = "";
-
-    paginados.forEach(e => {
+    const txt = searchInput.value.toLowerCase();
+    const res = eventos.filter(e =>
+        e.titulo.toLowerCase().includes(txt) &&
+        (!filterSede.value || e.idSede == filterSede.value) &&
+        (!filterTipo.value || e.idTipoEvento == filterTipo.value)
+    );
+    res.forEach(e => {
         tablaBody.innerHTML += `
             <tr>
                 <td>${e.idEvento}</td>
                 <td>${e.titulo}</td>
-                <td>${e.sede || ""}</td>
-                <td>${e.tipoEvento || ""}</td>
+                <td>${e.sede}</td>
+                <td>${e.tipoEvento}</td>
                 <td>${e.reqRegistro ? "Sí" : "No"}</td>
                 <td>${e.participaPublico ? "Sí" : "No"}</td>
                 <td>
                     <button onclick="editar(${e.idEvento})">✏️</button>
                     <button onclick="eliminar(${e.idEvento})">🗑️</button>
                 </td>
-            </tr>
-        `;
+            </tr>`;
     });
-
-    renderPaginacion(filtrados.length);
-}
-
-// ===============================
-// PAGINACIÓN
-// ===============================
-function renderPaginacion(total) {
-    const cont = document.getElementById("paginacion");
-    cont.innerHTML = "";
-
-    const totalPaginas = Math.ceil(total / porPagina);
-
-    cont.innerHTML += `<button onclick="cambiarPagina(-1)" ${paginaActual === 1 ? "disabled" : ""}>Anterior</button>`;
-    cont.innerHTML += `<span>Página ${paginaActual} de ${totalPaginas}</span>`;
-    cont.innerHTML += `<button onclick="cambiarPagina(1)" ${paginaActual === totalPaginas ? "disabled" : ""}>Siguiente</button>`;
-}
-
-function cambiarPagina(delta) {
-    paginaActual += delta;
-    if (paginaActual < 1) paginaActual = 1;
-    renderTabla();
 }
 
 // ===============================
 // FILTROS
 // ===============================
-// ===============================
-// LLENAR SELECTS
-// ===============================
-async function llenarFiltros() {
-    try {
-        // ---- SEDES ----
-        const resSedes = await fetch("http://localhost:3000/api/sedes");
-        const sedes = await resSedes.json();
-
-        // Limpiar selects
-        sedeFilter.innerHTML = `<option value="">Sedes</option>`;
-        sedeModal.innerHTML = `<option value="">Selecciona una sede</option>`;
-
-        sedes.forEach(s => {
-            const optionFilter = document.createElement("option");
-            optionFilter.value = s.idSede;
-            optionFilter.textContent = s.nombre;
-            sedeFilter.appendChild(optionFilter);
-
-            const optionModal = document.createElement("option");
-            optionModal.value = s.idSede;
-            optionModal.textContent = s.nombre;
-            sedeModal.appendChild(optionModal);
-        });
-
-        // ---- TIPOS DE EVENTO ----
-        const resTipos = await fetch("http://localhost:3000/api/categorias");
-        const tipos = await resTipos.json();
-
-        tipoFilter.innerHTML = `<option value="">Categorias</option>`;
-        tipoEventoModal.innerHTML = `<option value="">Selecciona un tipo de evento</option>`;
-
-        tipos.forEach(t => {
-            const optionFilter = document.createElement("option");
-            optionFilter.value = t.idTipoEvento;
-            optionFilter.textContent = t.tipoEvento;
-            tipoFilter.appendChild(optionFilter);
-
-            const optionModal = document.createElement("option");
-            optionModal.value = t.idTipoEvento;
-            optionModal.textContent = t.tipoEvento;
-            tipoEventoModal.appendChild(optionModal);
-        });
-
-    } catch (err) {
-        console.error(err);
-        toast("Error cargando sedes o tipos", "error");
-    }
+function aplicarFiltros() {
+    const txt = searchInput.value.toLowerCase();
+    const res = eventos.filter(e =>
+        e.titulo.toLowerCase().includes(txt) &&
+        (!filterSede.value || e.idSede == filterSede.value) &&
+        (!filterTipo.value || e.idTipoEvento == filterTipo.value)
+    );
+    renderTabla(res);
 }
-
 
 // ===============================
 // MODAL
 // ===============================
 function openModalNuevo() {
-    editId = null;
-    modalTitle.textContent = "Nuevo Evento";
     limpiarModal();
-    document.getElementById("modal").style.display = "flex";
+    modalTitle.textContent = "Nuevo Evento";
+    modal.style.display = "flex";
 }
 
 function closeModal() {
-    document.getElementById("modal").style.display = "none";
+    modal.style.display = "none";
 }
 
 function limpiarModal() {
+    editandoId = null;
     inputTitulo.value = "";
     inputSinopsis.value = "";
     inputDescripcion.value = "";
@@ -211,44 +169,49 @@ function limpiarModal() {
     inputImagen.value = "";
     checkRegistro.checked = false;
     checkPublico.checked = false;
-    sedeModal.value = "";
-    tipoEventoModal.value = "";
     horariosContainer.innerHTML = "";
-    mostrarSubcampos();
-}
-
-// ===============================
-// HORARIOS
-// ===============================
-function agregarHorario() {
-    const div = document.createElement("div");
-    div.className = "horario-item";
-    div.innerHTML = `
-        <input type="datetime-local" class="hora-inicio">
-        <input type="datetime-local" class="hora-fin">
-        <button type="button" onclick="this.parentNode.remove()">✖</button>
-    `;
-    horariosContainer.appendChild(div);
+    inputSetlist.value = "";
+    inputMateriales.value = "";
+    inputRangoEdad.value = "";
+    inputPremio.value = "";
+    libroSelect.value = "";
+    Array.from(orgContainer.options).forEach(o => o.selected = false);
+    document.querySelectorAll(".personaCheckbox").forEach(cb => cb.checked = false);
+    document.querySelectorAll(".subtipo").forEach(d => d.style.display = "none");
 }
 
 // ===============================
 // SUBTIPOS
 // ===============================
 function mostrarSubcampos() {
-    const tipo = tipoEventoModal.value;
-    document.querySelectorAll(".subtipo").forEach(div => div.style.display = "none");
-
-    if (tipo == 1) document.getElementById("subEditorial").style.display = "block";
-    if (tipo == 2) document.getElementById("subMusical").style.display = "block";
-    if (tipo == 3) document.getElementById("subTaller").style.display = "block";
-    if (tipo == 4) document.getElementById("subPremiacion").style.display = "block";
+    document.querySelectorAll(".subtipo").forEach(d => d.style.display = "none");
+    const t = tipoEventoModal.options[tipoEventoModal.selectedIndex].text.toLowerCase();
+    if (t.includes("musical")) subMusical.style.display = "block";
+    if (t.includes("taller")) subTaller.style.display = "block";
+    if (t.includes("premiación")) subPremiacion.style.display = "block";
+    if (t.includes("editorial")) subEditorial.style.display = "block";
 }
 
 // ===============================
-// GUARDAR EVENTO
+// HORARIOS
+// ===============================
+function agregarHorario(fecha = "", hora = "") {
+    const div = document.createElement("div");
+    div.innerHTML = `
+        <input type="date" class="fecha" value="${fecha}">
+        <input type="time" class="hora" value="${hora}">
+        <button type="button" onclick="this.parentElement.remove()">❌</button>
+    `;
+    horariosContainer.appendChild(div);
+}
+
+// ===============================
+// CRUD EVENTOS
 // ===============================
 async function save() {
-    const body = {
+    if(!validarFormulario()) return;
+
+    const data = {
         titulo: inputTitulo.value,
         sinopsis: inputSinopsis.value,
         descripcion: inputDescripcion.value,
@@ -257,105 +220,215 @@ async function save() {
         reqRegistro: checkRegistro.checked,
         participaPublico: checkPublico.checked,
         idSede: sedeModal.value,
-        idTipoEvento: tipoEventoModal.value,
-        horarios: []
+        idTipoEvento: tipoEventoModal.value
     };
 
-    document.querySelectorAll(".horario-item").forEach(h => {
-        body.horarios.push({
-            inicio: h.querySelector(".hora-inicio").value,
-            fin: h.querySelector(".hora-fin").value
+    let idEvento;
+
+    if(editandoId){
+        await fetch(`${API}/eventos/${editandoId}`, {
+            method:"PUT",
+            headers:{"Content-Type":"application/json"},
+            body: JSON.stringify(data)
         });
-    });
+        idEvento = editandoId;
+    } else {
+        const res = await fetch(`${API}/eventos`, {
+            method:"POST",
+            headers:{"Content-Type":"application/json"},
+            body: JSON.stringify(data)
+        });
+        const r = await res.json();
+        idEvento = r.idEvento; // asegúrate que el backend devuelva idEvento
+    }
 
-    try {
-        let res;
-        if (editId) {
-            res = await fetch(`${API}/${editId}`, {
-                method: "PUT",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify(body)
-            });
-        } else {
-            res = await fetch(API, {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify(body)
-            });
-        }
+    await guardarSubtipo(idEvento);
+    await guardarRelaciones(idEvento);
+    await guardarHorarios(idEvento);
 
-        const msg = await res.json();
-        toast(msg.msg || "Operación exitosa");
-        closeModal();
-        cargarEventos();
-        editId = null;
-    } catch (err) {
-        console.error(err);
-        toast("Error al guardar", "error");
+    closeModal();
+    cargarEventos();
+}
+
+// ===============================
+// SUBTIPOS CRUD
+// ===============================
+async function guardarSubtipo(idEvento){
+    const tipo = tipoEventoModal.options[tipoEventoModal.selectedIndex].text.toLowerCase();
+    if(tipo.includes("musical")){
+        await fetch(`${API}/eventos/musical/${editandoId||idEvento}`, {
+            method: editandoId?"PUT":"POST",
+            headers:{"Content-Type":"application/json"},
+            body: JSON.stringify({idMusical:idEvento,setlist:inputSetlist.value})
+        });
+    }
+    if(tipo.includes("taller")){
+        await fetch(`${API}/eventos/taller/${editandoId||idEvento}`, {
+            method: editandoId?"PUT":"POST",
+            headers:{"Content-Type":"application/json"},
+            body: JSON.stringify({idTaller:idEvento,materiales:inputMateriales.value,edades:inputRangoEdad.value})
+        });
+    }
+    if(tipo.includes("premiación")){
+        await fetch(`${API}/eventos/premiacion/${editandoId||idEvento}`, {
+            method: editandoId?"PUT":"POST",
+            headers:{"Content-Type":"application/json"},
+            body: JSON.stringify({idPrem:idEvento,premio:inputPremio.value})
+        });
+    }
+    if(tipo.includes("editorial")){
+        await fetch(`${API}/eventos/presEditorial`, {
+            method:"POST",
+            headers:{"Content-Type":"application/json"},
+            body: JSON.stringify({idPres:idEvento})
+        });
     }
 }
 
 // ===============================
-// EDITAR EVENTO
+// RELACIONES
 // ===============================
-async function editar(id) {
-    editId = id;
-    const res = await fetch(`${API}/${id}`);
-    const ev = await res.json();
+async function guardarRelaciones(idEvento){
+    // Organizaciones
+    const orgs = Array.from(orgContainer.selectedOptions).map(o => o.value);
+    for(const o of orgs){
+        await fetch(`${API}/eventos/organizaciones`, {
+            method:"POST",
+            headers:{"Content-Type":"application/json"},
+            body: JSON.stringify({idEvento,idOrganizacion:o})
+        });
+    }
 
-    document.getElementById("modal").style.display = "flex";
-    modalTitle.textContent = "Editar Evento";
+    // Personas
+    const personas = Array.from(document.querySelectorAll(".personaCheckbox"))
+        .filter(cb=>cb.checked).map(cb=>cb.value);
+    for(const p of personas){
+        await fetch(`${API}/relPersonaEvento`, {
+            method:"POST",
+            headers:{"Content-Type":"application/json"},
+            body: JSON.stringify({idEvento,idPersona:p,idRol:1}) // rol fijo o modificar según UI
+        });
+    }
+}
 
-    inputTitulo.value = ev.titulo;
-    inputSinopsis.value = ev.sinopsis;
-    inputDescripcion.value = ev.descripcion || "";
-    inputInfoAd.value = ev.infoAd || "";
-    inputImagen.value = ev.imagen || "";
-    checkRegistro.checked = ev.reqRegistro;
-    checkPublico.checked = ev.participaPublico;
-    sedeModal.value = ev.idSede;
-    tipoEventoModal.value = ev.idTipoEvento;
+// ===============================
+// HORARIOS CRUD
+// ===============================
+async function guardarHorarios(idEvento){
+    // Borrar antiguos
+    await fetch(`${API}/eventos/horarios/${idEvento}`,{method:"DELETE"});
+
+    const fechas = document.querySelectorAll(".fecha");
+    const horas = document.querySelectorAll(".hora");
+    for(let i=0;i<fechas.length;i++){
+        await fetch(`${API}/horarios`,{
+            method:"POST",
+            headers:{"Content-Type":"application/json"},
+            body: JSON.stringify({idEvento,finicio:fechas[i].value,ffin:horas[i].value})
+        });
+    }
+}
+
+// ===============================
+// EDITAR
+// ===============================
+async function editar(id){
+    limpiarModal();
+    modalTitle.textContent="Editar Evento";
+    editandoId=id;
+
+    const res = await fetch(`${API}/eventos/${id}`);
+    const e = await res.json();
+
+    inputTitulo.value=e.titulo;
+    inputSinopsis.value=e.sinopsis;
+    inputDescripcion.value=e.descripcion;
+    inputInfoAd.value=e.infoAd;
+    inputImagen.value=e.imagen;
+    checkRegistro.checked=e.reqRegistro;
+    checkPublico.checked=e.participaPublico;
+    sedeModal.value=e.idSede;
+    tipoEventoModal.value=e.idTipoEvento;
+
     mostrarSubcampos();
 
-    horariosContainer.innerHTML = "";
-    if (ev.horarios && Array.isArray(ev.horarios)) {
-        ev.horarios.forEach(h => {
-            const div = document.createElement("div");
-            div.className = "horario-item";
-            div.innerHTML = `
-                <input type="datetime-local" class="hora-inicio" value="${h.inicio}">
-                <input type="datetime-local" class="hora-fin" value="${h.fin}">
-                <button type="button" onclick="this.parentNode.remove()">✖</button>
-            `;
-            horariosContainer.appendChild(div);
-        });
-    }
+    await cargarSubtipoEditar(id);
+    await cargarRelacionesEditar(id);
+    await cargarHorariosEditar(id);
+
+    modal.style.display="flex";
 }
 
 // ===============================
-// ELIMINAR EVENTO
+// CARGA SUBTIPOS, RELACIONES, HORARIOS
 // ===============================
-async function eliminar(id) {
-    if (!confirm("¿Eliminar evento?")) return;
+async function cargarSubtipoEditar(idEvento){
+    const res = await fetch(`${API}/eventos/${idEvento}`);
+    const data = await res.json();
 
-    try {
-        const res = await fetch(`${API}/${id}`, { method: "DELETE" });
-        const msg = await res.json();
-        toast(msg.msg || "Evento eliminado");
-        cargarEventos();
-    } catch (e) {
-        toast("Error al eliminar", "error");
+    if(data.esMusical){
+        subMusical.style.display="block";
+        inputSetlist.value=data.setlist||"";
+    }
+    if(data.esTaller){
+        subTaller.style.display="block";
+        inputMateriales.value=data.materiales||"";
+        inputRangoEdad.value=data.edades||"";
+    }
+    if(data.esPremiacion){
+        subPremiacion.style.display="block";
+        inputPremio.value=data.premio||"";
+    }
+    if(data.esPresEditorial){
+        subEditorial.style.display="block";
+        libroSelect.value=data.idLibro||"";
     }
 }
 
-// ===============================
-// LISTENERS FILTROS Y BUSQUEDA
-// ===============================
-searchInput.addEventListener("input", () => { paginaActual = 1; renderTabla(); });
-sedeFilter.addEventListener("change", () => { paginaActual = 1; renderTabla(); });
-tipoFilter.addEventListener("change", () => { paginaActual = 1; renderTabla(); });
+async function cargarRelacionesEditar(idEvento){
+    // Personas
+    const res = await fetch(`${API}/relPersonaEvento/evento/${idEvento}`);
+    const personas = await res.json();
+    document.querySelectorAll(".personaCheckbox").forEach(cb=>{
+        cb.checked=personas.some(p=>p.idPersona==cb.value);
+    });
+
+    // Organizaciones
+    const resOrg = await fetch(`${API}/eventos/organizaciones/${idEvento}`);
+    const orgs = await resOrg.json();
+    Array.from(orgContainer.options).forEach(opt=>{
+        opt.selected=orgs.some(o=>o.idOrganizacion==opt.value);
+    });
+}
+
+async function cargarHorariosEditar(idEvento){
+    const res = await fetch(`${API}/eventos/horarios/${idEvento}`);
+    const horarios = await res.json();
+    horariosContainer.innerHTML="";
+    horarios.forEach(h=>{
+        agregarHorario(h.finicio,h.ffin);
+    });
+}
 
 // ===============================
-// INICIO
+// ELIMINAR
 // ===============================
-init();
+async function eliminar(id){
+    if(!confirm("¿Eliminar este evento?")) return;
+    await fetch(`${API}/eventos/${id}`,{method:"DELETE"});
+    cargarEventos();
+}
+
+// ===============================
+// VALIDACIONES
+// ===============================
+function validarFormulario(){
+    if(!inputTitulo.value.trim()){ alert("El título es obligatorio"); return false; }
+    if(!tipoEventoModal.value){ alert("Selecciona un tipo de evento"); return false; }
+
+    const tipo = tipoEventoModal.options[tipoEventoModal.selectedIndex].text.toLowerCase();
+    if(tipo.includes("musical") && !inputSetlist.value.trim()){
+        alert("Ingresa un setlist para evento musical"); return false;
+    }
+    return true;
+}

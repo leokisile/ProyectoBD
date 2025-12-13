@@ -128,7 +128,7 @@ main {
 .ficha img {
     width: 120px;
     height: 160px;
-    object-fit: fill;
+    object-fit: cover;
     border-radius: 8px;
     margin-bottom: 10px;
 }

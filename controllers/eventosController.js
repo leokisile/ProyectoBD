@@ -7,12 +7,23 @@ exports.obtenerTodos = async (req, res) => {
     try {
         const connection = await db;
         const [rows] = await connection.query(`
-            SELECT e.*, s.nombre AS sede, t.tipoEvento AS tipoEvento
+            SELECT 
+                e.*, 
+                s.nombre AS sede, 
+                t.tipoEvento AS tipoEvento,
+                m.idMusical IS NOT NULL AS esMusical,
+                ta.idTaller IS NOT NULL AS esTaller,
+                p.idPremiacion IS NOT NULL AS esPremiacion,
+                pe.idPresEditorial IS NOT NULL AS esPresEditorial
             FROM eventos e
             INNER JOIN sedes s ON e.idSede = s.idSede
             INNER JOIN tipoEventos t ON e.idTipoEvento = t.idTipoEvento
+            LEFT JOIN eventoMusical m ON e.idEvento = m.idMusical
+            LEFT JOIN taller ta ON e.idEvento = ta.idTaller
+            LEFT JOIN premiacion p ON e.idEvento = p.idPremiacion
+            LEFT JOIN presEditorial pe ON e.idEvento = pe.idPresEditorial
             ORDER BY e.idEvento ASC;
-            `);
+        `);
         res.json(rows);
     } catch (err) {
         console.log(err);
@@ -66,6 +77,78 @@ exports.crear = async (req, res) => {
     }
 };
 
+exports.crearPres = async (req, res) => {
+    try {
+        const connection = await db;
+        const {idPres} = req.body;
+
+        const [result] = await connection.query(
+            `CALL crearPresEditorial(?, @msg); SELECT @msg;`,
+            [idPres]
+        );
+
+        const mensaje = result[1][0]['@msg'];
+        res.json({ mensaje });
+
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+};
+
+exports.crearMusical = async (req, res) => {
+    try {
+        const connection = await db;
+        const {idMusical, setlist} = req.body;
+
+        const [result] = await connection.query(
+            `CALL crearEventoMusical(?,?, @msg); SELECT @msg;`,
+            [idMusical, setlist]
+        );
+
+        const mensaje = result[1][0]['@msg'];
+        res.json({ mensaje });
+
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+};
+
+exports.crearTaller = async (req, res) => {
+    try {
+        const connection = await db;
+        const {idTaller, materiales, edades} = req.body;
+
+        const [result] = await connection.query(
+            `CALL crearTaller(?,?,?, @msg); SELECT @msg;`,
+            [idTaller, materiales, edades]
+        );
+
+        const mensaje = result[1][0]['@msg'];
+        res.json({ mensaje });
+
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+};
+
+exports.crearPremiacion= async (req, res) => {
+    try {
+        const connection = await db;
+        const {idPrem, premio} = req.body;
+
+        const [result] = await connection.query(
+            `CALL crearPremiacion(?,?,@msg); SELECT @msg;`,
+            [idPrem, premio]
+        );
+
+        const mensaje = result[1][0]['@msg'];
+        res.json({ mensaje });
+
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+};
+
 // =======================================================
 // PUT modificar
 // =======================================================
@@ -85,6 +168,66 @@ exports.modificar = async (req, res) => {
                 idEvento, titulo, sinopsis, reqRegistro, participaPublico,
                 descripcion, infoAd, imagen, idSede, idTipoEvento
             ]
+        );
+
+        const mensaje = result[1][0]['@msg'];
+        res.json({ mensaje });
+
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+};
+
+exports.modificarMusical = async (req, res) => {
+    try {
+        const connection = await db;
+        const { idEvento } = req.params;
+
+        const {setlist} = req.body;
+
+        const [result] = await connection.query(
+            `CALL modificarEventoMusical(?,?, @msg); SELECT @msg;`,
+            [idEvento,setlist]
+        );
+
+        const mensaje = result[1][0]['@msg'];
+        res.json({ mensaje });
+
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+};
+
+exports.modificarTaller = async (req, res) => {
+    try {
+        const connection = await db;
+        const { idEvento } = req.params;
+
+        const {materiales, edades} = req.body;
+
+        const [result] = await connection.query(
+            `CALL modificarTaller(?,?,?, @msg); SELECT @msg;`,
+            [idEvento,materiales, edades]
+        );
+
+        const mensaje = result[1][0]['@msg'];
+        res.json({ mensaje });
+
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+};
+
+exports.modificarPrem = async (req, res) => {
+    try {
+        const connection = await db;
+        const { idEvento } = req.params;
+
+        const {premio} = req.body;
+
+        const [result] = await connection.query(
+            `CALL modificarPremiacion(?,?, @msg); SELECT @msg;`,
+            [idEvento,premio]
         );
 
         const mensaje = result[1][0]['@msg'];

@@ -48,22 +48,26 @@ main {
 /* ============================
    MENÚ SECUNDARIO
 ============================ */
+/* =========================
+   MENÚ SECUNDARIO
+========================= */
 .main-menu {
     width: 100%;
     background: #fff;
-    padding: 15px 0;
+    padding: 12px 0;
     display: flex;
     position: sticky;
     top: 0;
     z-index: 99;
     align-items: center;
     justify-content: center;
-    gap: 40px;
+    gap: 50px;
     border-bottom: 1px solid #ddd;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.05);
 }
 
 .main-menu img {
-    height: 75px;
+    height: 70px;
     width: auto;
 }
 
@@ -77,12 +81,17 @@ main {
 .main-menu ul li a {
     color: #333;
     text-decoration: none;
-    font-size: 18px;
-    font-weight: bold;
+    font-size: 17px;
+    font-weight: 500;
+    padding: 5px 10px;
+    transition: all 0.3s;
+    border-radius: 6px;
 }
 
-
-
+.main-menu ul li a:hover {
+    background: #222;
+    color: #fff;
+}
 /* === TÍTULO === */
 .titulo {
     text-align: center;

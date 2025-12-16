@@ -39,48 +39,23 @@
         <div class="filtros">
             <select id="categoriaFiltro">
                 <option value="">Todas las Categorías</option>
-                <option value="Ficción">Ficción</option>
-                <option value="No Ficción">No Ficción</option>
-                <option value="Infantil">Infantil</option>
-                <option value="Juvenil">Juvenil</option>
-                <option value="Académico">Académico</option>
             </select>
 
             <select id="fechaFiltro">
                 <option value="">Todas las Fechas</option>
-                <option value="dia1">Día 1</option>
-                <option value="dia2">Día 2</option>
             </select>
         </div>
     </div>
 
     <!-- CUADRÍCULA DE FICHAS -->
-    <div class="gridEventos">
-        <div class="fichaEvento">
-            <img src="images/libro1.jpg" alt="Libro 1">
-            <h3>Título del libro</h3>
-            <p><strong>Presenta:</strong> Juan Pérez</p>
-            <p><strong>Categoría:</strong> Ficción</p>
-            <p><strong>Sede:</strong> Auditorio 2</p>
-            <p class="sinopsis">Sinopsis reducida del libro...</p>
-            <p class="fecha">Domingo 17 – 12:00 hrs</p>
-        </div>
-
-        <div class="fichaEvento">
-            <img src="images/libro2.jpg" alt="Libro 2">
-            <h3>Título del libro 2</h3>
-            <p><strong>Presenta:</strong> Ana Gómez</p>
-            <p><strong>Categoría:</strong> Juvenil</p>
-            <p><strong>Sede:</strong> Foro 1</p>
-            <p class="sinopsis">Descripción breve…</p>
-            <p class="fecha">Sábado 16 – 16:00 hrs</p>
-        </div>
+    <div class="filaFichas" id="filaFichas">
+        <!-- Las fichas de eventos se generarán aquí dinámicamente -->
     </div>
 </main>
     <div class="footer">
         <p>&copy; 2024 FENAL. Todos los derechos reservados.</p>
     </div>
-
+    <script src="../scripts/progEditorial.js"></script>
 </body>
 
 </html>

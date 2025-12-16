@@ -12,30 +12,37 @@
     <header class="header">
         <div class="header-content">
             <h2>INSTITUTO CULTURAL DE LEÓN</h2>
-            </nav>
         </div>
     </header>
 
-        <!-- MENÚ SECUNDARIO -->
-        <nav class="main-menu">
-            <a href="index.html">
-                <img src="../resources/fenal-logo.png" alt="Logo FENAL">
-            </a>
-            <ul>
-                <li><a href="progGeneral.html">Programa general</a></li>
-                <li><a href="progEditorial.html">Programa editorial</a></li>
-                <li><a href="progArtistico.html">Programa artístico</a></li>
-                <li><a href="talleres.html">Talleres</a></li>
-                <li><a href="participantes.html">Participantes</a></li>
-                <li><a href="nosotros.html">Nosotros</a></li>
-            </ul>
-        </nav>
+    <!-- MENÚ SECUNDARIO -->
+    <nav class="main-menu">
+        <a href="index.html">
+            <img src="../resources/fenal-logo.png" alt="Logo FENAL">
+        </a>
+        <ul>
+            <li><a href="progGeneral.html">Programa general</a></li>
+            <li><a href="progEditorial.html">Programa editorial</a></li>
+            <li><a href="progArtistico.html">Programa artístico</a></li>
+            <li><a href="talleres.html">Talleres</a></li>
+            <li><a href="participantes.html">Participantes</a></li>
+            <li><a href="nosotros.html">Nosotros</a></li>
+        </ul>
+    </nav>
 
+    <!-- Archivo PDF -->
     <div class="prgoramaArchivo">
         <h2>Programa General</h2>
-        <iframe src="https://docs.google.com/document/d/e/2PACX-1vQXKJHk2Z3bX5F6G7H8I9J0K1L2M3N4O5P6Q7R8S9T0U1V2W3X4Y5Z6A7B8C9D0E/pub?embedded=true" width="100%" height="600px"></iframe>
+        <iframe src="../resources/prgoGeneral.pdf" width="100%" height="600px"></iframe>
     </div>
 
+    <!-- Barra de búsqueda -->
+    <div class="busquedaEventos">
+        <label for="searchInput">Buscar evento u organización:</label>
+        <input type="text" id="searchInput" placeholder="Escribe el nombre del evento o la organización...">
+    </div>
+
+    <!-- Tabla de eventos -->
     <div class="tablaEventos">
         <h2>Eventos Destacados</h2>
         <table>
@@ -58,4 +65,5 @@
     <div class="footer">
         <p>&copy; 2024 FENAL. Todos los derechos reservados.</p>
     </div>
+</body>
 </html>

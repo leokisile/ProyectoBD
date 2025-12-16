@@ -37,26 +37,61 @@ async function cargarCategorias() {
     }
 }
 
+async function cargarDias() {
+    try {
+        const res = await fetch("http://localhost:3000/api/consultas/Dias");
+        const fechas = await res.json();
+
+        // Limpiar select
+        fechaFiltro.innerHTML = '<option value="">Todas las Fechas</option>';
+
+        // Extraer, formatear y ordenar fechas
+        const fechasFormateadas = fechas
+            .map(item => item.fechaInicio.split("T")[0]) // YYYY-MM-DD
+            .sort();
+
+        fechasFormateadas.forEach(fecha => {
+            const option = document.createElement("option");
+            option.value = fecha;
+            option.textContent = fecha;
+            fechaFiltro.appendChild(option);
+        });
+
+    } catch (err) {
+        console.error("Error cargando fechas:", err);
+    }
+}
+
+
 // =====================
 // Cargar eventos (filtrados por categoría y fecha)
 // =====================
 async function cargarEventos() {
     try {
-        let idTipoEvento = categoriaFiltro.value || 0; // 0 indica todos los predeterminados
+        // Si no hay categoría seleccionada, usar array de IDs predeterminados
+        let categoriaSeleccionada = categoriaFiltro.value;
+        let idTipoEvento = categoriaSeleccionada || "predeterminados"; 
         let fecha = fechaFiltro.value || null;
 
-        let url = `http://localhost:3000/api/consultas/EventoCategoria/${idTipoEvento}`;
-        if(fecha) url += `/${fecha}`;
+        let url;
+        if (idTipoEvento === "predeterminados") {
+            // Endpoint que devuelve todos los eventos de categorías predeterminadas
+            //(7,8,10,11,12,13,18,19,21,22,28)
+            url = `http://localhost:3000/api/consultas/EventoCategoria/-3`; // 0 indica todas las categorías predeterminadas
+        } else {
+            url = `http://localhost:3000/api/consultas/EventoCategoria/${idTipoEvento}`;
+        }
+
+        if (fecha) url += `/${fecha}`;
 
         const res = await fetch(url);
         const data = await res.json();
 
-        // Verificar si se recibió un array
         eventos = Array.isArray(data) ? data : (data[0] || []);
 
         filaFichas.innerHTML = "";
 
-        if(eventos.length === 0){
+        if (eventos.length === 0) {
             filaFichas.innerHTML = "<p>No hay eventos para estos filtros.</p>";
             return;
         }
@@ -65,14 +100,24 @@ async function cargarEventos() {
             const ficha = document.createElement("div");
             ficha.className = "fichaEvento";
 
+            let fechasTexto = "-";
+            if (ev.fechasInicio) {
+                fechasTexto = ev.fechasInicio
+                    .split(", ")
+                    .map(f => new Date(f).toLocaleDateString("es-MX"))
+                    .join("<br>");
+            }
+
             ficha.innerHTML = `
                 <img src="../resources/eventoBanner.jpeg" alt="Evento img">
                 <h3>${ev.titulo}</h3>
-                <p>Presenta: ${ev.presentadores || "-"}</p>
-                <p>Categoría: ${categoriaFiltro.options[categoriaFiltro.selectedIndex]?.text || "-"}</p>
-                <p>Sede: ${ev.sede || "-"}</p>
+                <p><strong>Presenta:</strong> ${ev.presentadores || "-"}</p>
+                <p><strong>Categoría:</strong> ${
+                    categoriaFiltro.options[categoriaFiltro.selectedIndex]?.text || "-"
+                }</p>
+                <p><strong>Sede:</strong> ${ev.sede || "-"}</p>
                 <p>${ev.descripcion ? ev.descripcion.substring(0, 80) + "..." : "-"}</p>
-                <p>${ev.fechaInicio ? new Date(ev.fechaInicio).toLocaleString("es-MX") : "-"}</p>
+                <p><strong>Fechas:</strong><br>${fechasTexto}</p>
             `;
 
             ficha.addEventListener("click", () => {
@@ -85,36 +130,6 @@ async function cargarEventos() {
     } catch (err) {
         console.error("Error cargando eventos:", err);
         filaFichas.innerHTML = "<p>Error al cargar eventos.</p>";
-    }
-}
-
-// =====================
-// Cargar días únicos para el filtro
-// =====================
-async function cargarDias() {
-    try {
-        // Extraer todas las fechas de los eventos ya cargados
-        const fechasUnicas = new Set();
-        eventos.forEach(ev => {
-            if(ev.fechaInicio){
-                const fechaObj = new Date(ev.fechaInicio);
-                if(!isNaN(fechaObj)) {
-                    fechasUnicas.add(fechaObj.toISOString().split("T")[0]);
-                }
-            }
-        });
-
-        // Llenar select
-        fechaFiltro.innerHTML = '<option value="">Todas las Fechas</option>';
-        Array.from(fechasUnicas).sort().forEach(fechaStr => {
-            const option = document.createElement("option");
-            option.value = fechaStr;
-            option.textContent = fechaStr;
-            fechaFiltro.appendChild(option);
-        });
-
-    } catch (err) {
-        console.error("Error cargando días:", err);
     }
 }
 

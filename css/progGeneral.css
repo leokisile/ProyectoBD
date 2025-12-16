@@ -5,16 +5,18 @@ body {
     margin: 0;
     font-family: Arial, Helvetica, sans-serif;
     background: #f5f5f5;
+    color: #333;
 }
 
-/* ============================
+/* =========================
    HEADER PRINCIPAL
-============================ */
+========================= */
 .header {
     width: 100%;
     background: #222;
     padding: 15px 0;
     color: #fff;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.2);
 }
 
 .header-content {
@@ -23,34 +25,38 @@ body {
     margin: auto;
     display: flex;
     align-items: center;
-    justify-content: center; /* centrado como la referencia */
+    justify-content: center;
 }
 
 .header-content h2 {
-    font-size: 20px;
-    font-weight: normal;
+    font-size: 22px;
+    font-weight: 600;
     letter-spacing: 1px;
 }
 
-/* ============================
+/* =========================
    MENÚ SECUNDARIO
-============================ */
+========================= */
+/* =========================
+   MENÚ SECUNDARIO
+========================= */
 .main-menu {
     width: 100%;
     background: #fff;
-    padding: 15px 0;
+    padding: 12px 0;
     display: flex;
     position: sticky;
     top: 0;
     z-index: 99;
     align-items: center;
     justify-content: center;
-    gap: 40px;
+    gap: 50px;
     border-bottom: 1px solid #ddd;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.05);
 }
 
 .main-menu img {
-    height: 75px;
+    height: 70px;
     width: auto;
 }
 
@@ -64,44 +70,74 @@ body {
 .main-menu ul li a {
     color: #333;
     text-decoration: none;
-    font-size: 18px;
-    font-weight: bold;
+    font-size: 17px;
+    font-weight: 500;
+    padding: 5px 10px;
+    transition: all 0.3s;
+    border-radius: 6px;
 }
 
-
+.main-menu ul li a:hover {
+    background: #222;
+    color: #fff;
+}
 /* =========================
    PROGRAMA ARCHIVO (IFRAME)
 ========================= */
 .prgoramaArchivo {
     max-width: 1200px;
-    margin: 25px auto;
+    margin: 40px auto 20px auto;
     padding: 20px;
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 6px 18px rgba(0,0,0,0.1);
 }
 
 .prgoramaArchivo h2 {
     font-size: 28px;
-    margin-bottom: 15px;
+    margin-bottom: 20px;
+    color: #222;
+    text-align: center;
 }
 
-/* Iframe del programa */
 .prgoramaArchivo iframe {
     border: none;
-    border-radius: 8px;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+    border-radius: 10px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
 }
 
 /* =========================
-   CARRUSEL
+   BARRA DE BÚSQUEDA
 ========================= */
-.carruselPatrocinadores {
-    width: 100%;
-    overflow: hidden;
-    margin-top: 20px;
+.busquedaEventos {
+    max-width: 1200px;
+    margin: 30px auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
 }
 
-.carruselPatrocinadores img {
+.busquedaEventos label {
+    font-size: 16px;
+    font-weight: 500;
+    color: #222;
+}
+
+.busquedaEventos input {
     width: 100%;
-    display: block;
+    max-width: 500px;
+    padding: 10px 15px;
+    font-size: 16px;
+    border-radius: 10px;
+    border: 1px solid #ccc;
+    outline: none;
+    transition: all 0.3s;
+}
+
+.busquedaEventos input:focus {
+    border-color: #222;
+    box-shadow: 0 0 10px rgba(34,34,34,0.2);
 }
 
 /* =========================
@@ -109,39 +145,49 @@ body {
 ========================= */
 .tablaEventos {
     max-width: 1200px;
-    margin: 40px auto;
+    margin: 40px auto 60px auto;
     padding: 20px;
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 6px 18px rgba(0,0,0,0.1);
 }
 
 .tablaEventos h2 {
-    margin-bottom: 15px;
+    margin-bottom: 20px;
     font-size: 26px;
+    color: #222;
+    text-align: center;
 }
 
 .tablaEventos table {
     width: 100%;
     border-collapse: collapse;
-    background: white;
-    border-radius: 10px;
     overflow: hidden;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    border-radius: 12px;
+}
+
+.tablaEventos th, .tablaEventos td {
+    padding: 14px 12px;
+    text-align: left;
 }
 
 .tablaEventos th {
     background: #333;
     color: white;
-    padding: 14px;
-    text-align: left;
+    font-weight: 600;
     font-size: 15px;
 }
 
 .tablaEventos td {
-    padding: 12px;
-    border-bottom: 1px solid #ddd;
+    border-bottom: 1px solid #eee;
+    font-size: 14px;
+    color: #555;
 }
 
-.tablaEventos tr:hover {
+.tablaEventos tr:hover td {
     background: #f0f0f0;
+    color: #222;
+    transition: 0.3s;
 }
 
 .tablaEventos tr:last-child td {
@@ -153,8 +199,10 @@ body {
 ========================= */
 .footer {
     text-align: center;
-    padding: 20px;
+    padding: 25px;
     background: #222;
     color: white;
+    font-size: 14px;
     margin-top: 40px;
+    box-shadow: 0 -4px 10px rgba(0,0,0,0.2);
 }

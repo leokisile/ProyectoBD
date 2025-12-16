@@ -4,16 +4,16 @@ const idEvento = params.get('id');
 
 async function cargarEvento() {
     try {
-        // Obtener datos principales del evento
+        // Obtener datos principales del evento desde el procedimiento
         const res = await fetch(`http://localhost:3000/api/consultas/EventoIndv/${idEvento}`);
         const data = await res.json();
-        if(!data || data.length === 0) return;
+        if (!data || data.length === 0) return;
 
         const evento = data[0];
 
         // Campos básicos
-        document.getElementById('categoria').textContent = evento.tipoEvento;
-        document.getElementById('tituloEvento').textContent = evento.titulo;
+        document.getElementById('categoria').textContent = evento.tipoEvento || '-';
+        document.getElementById('tituloEvento').textContent = evento.titulo || '-';
         document.getElementById('imgEvento').src = evento.imagen || '../resources/eventoBanner.jpeg';
         document.getElementById('participantes').textContent = evento.participantes || '-';
         document.getElementById('sinopsis').textContent = evento.sinopsis || '-';
@@ -23,41 +23,65 @@ async function cargarEvento() {
         document.getElementById('biografias').textContent = evento.participantes || '-';
 
         // Mostrar condicionales
-        if(evento.reqRegistro === 1) document.getElementById('reqRegistro').style.display = 'block';
-        if(evento.participaPublico === 1) document.getElementById('participaPublico').style.display = 'block';
+        document.getElementById('reqRegistro').style.display = evento.reqRegistro === 1 ? 'block' : 'none';
+        document.getElementById('participaPublico').style.display = evento.participaPublico === 1 ? 'block' : 'none';
+
+        // Fechas
+        // Fechas
+const fechasDiv = document.getElementById('fechas');
+fechasDiv.innerHTML = '-';
+if (evento.fechasInicio) {
+    // Separar cada fecha del GROUP_CONCAT
+    const fechasArray = evento.fechasInicio
+        .split('\n')
+        .map(f => f.trim()) // eliminar espacios
+        .filter(f => f);    // eliminar strings vacíos
+
+    // Generar lista de fechas y horas
+            const listaFechas = fechasArray.map(f => {
+                const fechaObj = new Date(f);
+                const dia = fechaObj.toLocaleDateString('es-MX', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
+                const hora = fechaObj.toLocaleTimeString('es-MX', { hour: '2-digit', minute: '2-digit' });
+                return `<li>${dia} - ${hora}</li>`;
+            }).join('');
+
+            fechasDiv.innerHTML = `<ul>${listaFechas}</ul>`;
+        }
+
 
         // Información adicional según subevento
         const subeventosDiv = document.getElementById('subeventos');
+        subeventosDiv.innerHTML = '';
 
         // Musical
-        if(evento.esMusical === 1) {
+        if (evento.esMusical === 1) {
             const resSetlist = await fetch(`http://localhost:3000/api/consultas/Setlist/${idEvento}`);
             const setlist = await resSetlist.json();
             const divMusical = document.createElement('div');
-            divMusical.innerHTML = `<h4>Setlist Musical</h4><ul>${setlist.map(s => `<li>${s.cancion}</li>`).join('')}</ul>`;
+            divMusical.innerHTML = `<h4>Setlist Musical</h4><ul>${setlist.map(s => `<li>${s.setlist}</li>`).join('')}</ul>`;
             subeventosDiv.appendChild(divMusical);
         }
 
         // Taller
-        if(evento.esTaller === 1) {
+        if (evento.esTaller === 1) {
             const resTaller = await fetch(`http://localhost:3000/api/consultas/DatosTaller/${idEvento}`);
             const taller = await resTaller.json();
             const divTaller = document.createElement('div');
-            divTaller.innerHTML = `<h4>Taller</h4><p>${taller[0].infoAdicional || '-'}</p>`;
+            divTaller.innerHTML = `<h4>Taller</h4><p>${taller[0]?.materiales || '-'}</p><p>${taller[0]?.rangoEdad || '-'}</p>`;
             subeventosDiv.appendChild(divTaller);
         }
 
         // Premiación
-        if(evento.esPremiacion === 1) {
+        if (evento.esPremiacion === 1) {
             const resPremio = await fetch(`http://localhost:3000/api/consultas/Premio/${idEvento}`);
             const premio = await resPremio.json();
             const divPremio = document.createElement('div');
-            divPremio.innerHTML = `<h4>Premiación</h4><p>${premio[0].nombrePremio || '-'}</p>`;
+            divPremio.innerHTML = `<h4>Premiación</h4><p>${premio[0]?.premio || '-'}</p>`;
             subeventosDiv.appendChild(divPremio);
         }
 
         // Presentación Editorial
-        if(evento.esPresEditorial === 1) {
+        if (evento.esPresEditorial === 1) {
             const resLibros = await fetch(`http://localhost:3000/api/consultas/LibrosPres/${idEvento}`);
             const libros = await resLibros.json();
             const divLibros = document.createElement('div');

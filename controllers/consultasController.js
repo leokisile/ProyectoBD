@@ -81,14 +81,17 @@ exports.talleres = async (req, res) => {
 exports.eventoCategoria = async (req, res) => {
     try {
         const connection = await db;
-        const { idTipoEvento, fecha } = req.params;
+        let { idTipoEvento, fecha } = req.params;
 
-        // Si no hay fecha, pasamos NULL
+        // Convertimos a número (acepta negativos)
+        const tipoEventoNum = parseInt(idTipoEvento, 10);
+
+        // Fecha opcional
         const fechaParam = fecha || null;
 
         const [rows] = await connection.query(
             "CALL eventoCategoria(?, ?)",
-            [idTipoEvento, fechaParam]
+            [tipoEventoNum, fechaParam]
         );
 
         res.json(rows[0]);
@@ -96,6 +99,7 @@ exports.eventoCategoria = async (req, res) => {
         res.status(500).json({ error: err.message });
     }
 };
+
 
 // =============================
 // GET: Eventos especificos por ID
@@ -122,18 +126,34 @@ exports.eventoIndv = async (req, res) => {
 exports.librosPres = async (req, res) => {
     try {
         const connection = await db;
-        const { idPres} = req.params;
+        const { idPres } = req.params;
 
-        const [rows] = await connection.query(
-            "CALL librosPres(?)",
-            [idPres]
-        );
+        const [rows] = await connection.execute("CALL librosPres(?)", [idPres]);
+        console.log(rows);
 
-        res.json(rows[0]);
+
+        // results puede ser un arreglo de arreglos, tomamos el primero que contiene filas
+        let data;
+        if (Array.isArray(rows)) {
+            if (Array.isArray(rows[0])) {
+                data = rows[0]; // Primer conjunto de filas
+            } else {
+                data = rows;
+            }
+        } else {
+            data = [];
+        }
+
+        // Si data está vacío, respondemos con un arreglo vacío
+        res.json(data);
+
     } catch (err) {
+        console.error(err);
         res.status(500).json({ error: err.message });
     }
 };
+
+
 
 // =============================
 // GET: Setlist de un evento musical
@@ -143,7 +163,7 @@ exports.setlist = async (req, res) => {
         const connection = await db;
         const { id } = req.params;
 
-        const [rows] = await connection.query(
+        const [rows] = await connection.execute(
             "CALL setlist(?)",
             [id]
         );
@@ -162,7 +182,7 @@ exports.datosTaller = async (req, res) => {
         const connection = await db;
         const { id } = req.params;
 
-        const [rows] = await connection.query(
+        const [rows] = await connection.execute(
             "CALL datosTaller(?)",
             [id]
         );
@@ -181,7 +201,7 @@ exports.premio = async (req, res) => {
         const connection = await db;
         const { id } = req.params;
 
-        const [rows] = await connection.query(
+        const [rows] = await connection.execute(
             "CALL premio(?)",
             [id]
         );

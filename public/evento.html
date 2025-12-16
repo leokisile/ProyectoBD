@@ -11,12 +11,10 @@
     <header class="header">
         <div class="header-content">
             <h2>INSTITUTO CULTURAL DE LEÓN</h2>
-            </nav>
         </div>
     </header>
 
     <main>
-
         <!-- MENÚ SECUNDARIO -->
         <nav class="main-menu">
             <img src="../resources/fenal-logo.png">
@@ -30,53 +28,51 @@
             </ul>
         </nav>
 
-    <div class="evento">
-        <div class="imgEvento">
-            <img id="imgEvento" src="images/evento.jpg" alt="Imagen del Evento">
-        </div>
-
-        <div class="tituloEvento">
-            <p id="categoria">Categoria</p>
-            <h2 id="tituloEvento">Titulo del Evento</h2>
-            <p id="participantes">Participantes</p>
-            <p id="sinopsis">Sinopsis breve</p>
-            <h3 id="reqRegistro" style="display:none;">Requiere registro</h3>
-            <h3 id="participaPublico" style="display:none;">Participa el público</h3>
-        </div>
-        
-        <div class="cuerpoEvento">
-            <div class="detallesEvento">
-                <h3>Presenta</h3>
-                <p id="presentadores">Presentador u organización</p>
-                <hr>
-                <h3>Dia</h3>
-                <p id="fecha">15 de Julio de 2024</p>
-                <h3>Hora</h3>
-                <p id="hora">10:00 AM - 12:00 PM</p>
-                <h3>Sede</h3>
-                <p id="sede">Sala Principal</p>
+        <div class="evento">
+            <div class="imgEvento">
+                <img id="imgEvento" src="../resources/eventoBanner.jpeg" alt="Imagen del Evento">
             </div>
 
-            <div class="infoAdicionalEvento" id="infoAdicionalEvento">
-                <h3>Información Adicional</h3>
-                <div id="subeventos"></div>
+            <div class="tituloEvento">
+                <p id="categoria">Categoría</p>
+                <h2 id="tituloEvento">Título del Evento</h2>
+                <p id="participantes">Participantes</p>
+                <p id="sinopsis">Sinopsis breve</p>
+                <h3 id="reqRegistro" style="display:none;">Requiere registro</h3>
+                <h3 id="participaPublico" style="display:none;">Participa el público</h3>
             </div>
+            
+            <div class="cuerpoEvento">
+                <div class="detallesEvento">
+                    <h3>Presenta</h3>
+                    <p id="presentadores">Presentador u organización</p>
+                    <hr>
+                    <h3>Fechas</h3>
+                    <div id="fechas">15 de Julio de 2024</div> <!-- Contenedor dinámico de todas las fechas -->
+                    <h3>Sede</h3>
+                    <p id="sede">Sala Principal</p>
+                </div>
 
-            <div class="descripcionEvento">
-                <h3>Descripción/Sinopsis</h3>
-                <p id="descripcion">Aquí va una descripción detallada del evento.</p>
-                <h3>Biografías de participantes</h3>
-                <p id="biografias">Aquí se incluyen biografías breves de los participantes.</p>
+                <div class="infoAdicionalEvento" id="infoAdicionalEvento">
+                    <h3>Información Adicional / Sub-Eventos</h3>
+                    <div id="subeventos"></div> <!-- Aquí se inyectan Musical, Taller, Premiación o Libros -->
+                </div>
+
+                <div class="descripcionEvento">
+                    <h3>Descripción/Sinopsis</h3>
+                    <p id="descripcion">Aquí va una descripción detallada del evento.</p>
+                    <h3>Biografías de participantes</h3>
+                    <p id="biografias">Aquí se incluyen biografías breves de los participantes.</p>
+                </div>
             </div>
         </div>
-    </div>
     </main>
 
     <div class="footer">
         <p>&copy; 2024 FENAL. Todos los derechos reservados.</p>
     </div>
 
-    <!-- Script separado -->
+    <!-- Script -->
     <script src="../scripts/evento.js"></script>
 </body>
 </html>

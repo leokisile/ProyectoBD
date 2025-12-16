@@ -7,19 +7,21 @@ html, body {
 
 body {
     margin: 0;
+    padding: 0;
     font-family: Arial, Helvetica, sans-serif;
-    background: #f5f5f5;
+    background-color: #f5f5f5;
     display: flex;
     flex-direction: column;
     min-height: 100vh;
 }
 
 main {
-    flex: 1; /* ← esto empuja el footer hasta abajo */
+    flex: 1; /* empuja el footer hacia abajo */
 }
-/* ============================
+
+/* =========================
    HEADER PRINCIPAL
-============================ */
+========================= */
 .header {
     width: 100%;
     background: #222;
@@ -33,7 +35,7 @@ main {
     margin: auto;
     display: flex;
     align-items: center;
-    justify-content: center; /* centrado como la referencia */
+    justify-content: center;
 }
 
 .header-content h2 {
@@ -42,25 +44,29 @@ main {
     letter-spacing: 1px;
 }
 
-/* ============================
+/* =========================
    MENÚ SECUNDARIO
-============================ */
+========================= */
+/* =========================
+   MENÚ SECUNDARIO
+========================= */
 .main-menu {
     width: 100%;
     background: #fff;
-    padding: 15px 0;
+    padding: 12px 0;
     display: flex;
     position: sticky;
     top: 0;
     z-index: 99;
     align-items: center;
     justify-content: center;
-    gap: 40px;
+    gap: 50px;
     border-bottom: 1px solid #ddd;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.05);
 }
 
 .main-menu img {
-    height: 75px;
+    height: 70px;
     width: auto;
 }
 
@@ -74,28 +80,33 @@ main {
 .main-menu ul li a {
     color: #333;
     text-decoration: none;
-    font-size: 18px;
-    font-weight: bold;
+    font-size: 17px;
+    font-weight: 500;
+    padding: 5px 10px;
+    transition: all 0.3s;
+    border-radius: 6px;
 }
 
+.main-menu ul li a:hover {
+    background: #222;
+    color: #fff;
+}
 /* =========================
-   TÍTULO + FILTROS EN LÍNEA
+   TÍTULO Y FILTROS
 ========================= */
 .titulo-filtros {
-    margin: 20px auto;
-    max-width: 1200px;
-
     display: flex;
+    justify-content: center;
     align-items: center;
-    justify-content: space-between;
-
-    padding: 10px 20px;
+    gap: 30px;
+    margin: 40px auto;
+    max-width: 1200px;
+    flex-wrap: wrap;
 }
 
 .titulo-filtros h2 {
+    font-size: 32px;
     margin: 0;
-    font-size: 28px;
-    font-weight: bold;
 }
 
 .filtros {
@@ -104,63 +115,52 @@ main {
 }
 
 .filtros select {
-    padding: 8px 12px;
-    border-radius: 6px;
-    border: 1px solid #888;
+    padding: 10px 15px;
     font-size: 15px;
-}
-
-/* =========================
-   CARRUSEL
-========================= */
-.carruselPatrocinadores {
-    width: 100%;
-    overflow: hidden;
-}
-
-.carruselPatrocinadores img {
-    width: 100%;
-    display: block;
+    border-radius: 6px;
+    border: 1px solid #999;
 }
 
 /* =========================
    GRID DE EVENTOS
 ========================= */
-.gridEventos {
-    max-width: 1200px;
-    margin: 20px auto;
+.filaFichas {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-    gap: 25px;
-    padding: 0 20px 40px;
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    max-width: 1300px;
+    margin: 40px auto;
+    padding: 20px;
+    gap: 30px;
 }
 
 .fichaEvento {
-    background: white;
+    background-color: white;
     border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
     padding: 15px;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.15);
-    transition: 0.2s;
+    transition: transform 0.25s ease;
 }
 
 .fichaEvento:hover {
-    transform: translateY(-4px);
+    transform: translateY(-5px);
 }
 
 .fichaEvento img {
     width: 100%;
+    height: 180px;
+    object-fit: cover;
     border-radius: 8px;
-    margin-bottom: 10px;
 }
 
 .fichaEvento h3 {
-    margin: 5px 0;
+    margin-top: 15px;
     font-size: 20px;
+    color: #444;
 }
 
 .fichaEvento p {
-    margin: 4px 0;
-    font-size: 14px;
+    margin: 5px 0;
+    color: #666;
 }
 
 .fichaEvento .sinopsis {
@@ -177,8 +177,9 @@ main {
    FOOTER
 ========================= */
 .footer {
+    background-color: #222;
     text-align: center;
     padding: 20px;
-    background: #222;
     color: white;
+    margin-top: 40px;
 }

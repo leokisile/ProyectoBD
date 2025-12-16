@@ -27,12 +27,11 @@
     // Ruta sin fecha (para cargar todos)
     router.get("/EventoCategoria/:idTipoEvento", consultas.eventoCategoria);
 
-
     // GET: Eventos especificos por ID
     router.get("/EventoIndv/:idEvento", consultas.eventoIndv);
 
     // GET: Libros de presentacion editorial por id
-    router.get("/LibrosPres/:id", consultas.librosPres);
+    router.get("/LibrosPres/:idPres", consultas.librosPres);
 
     // GET: Setlist de un evento musical
     router.get("/Setlist/:id", consultas.setlist);

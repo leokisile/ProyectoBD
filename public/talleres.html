@@ -8,79 +8,54 @@
 </head>
 <body>
 
-
     <!-- HEADER -->
     <header class="header">
         <div class="header-content">
             <h2>INSTITUTO CULTURAL DE LEÓN</h2>
-            </nav>
         </div>
     </header>
 
-        <!-- MENÚ SECUNDARIO -->
-        <nav class="main-menu">
-            <a href="index.html">
-                <img src="../resources/fenal-logo.png" alt="Logo FENAL">
-            </a>
-            <ul>
-                <li><a href="progGeneral.html">Programa general</a></li>
-                <li><a href="progEditorial.html">Programa editorial</a></li>
-                <li><a href="progArtistico.html">Programa artístico</a></li>
-                <li><a href="talleres.html">Talleres</a></li>
-                <li><a href="participantes.html">Participantes</a></li>
-                <li><a href="nosotros.html">Nosotros</a></li>
-            </ul>
-        </nav>
-<main>
-    <!-- TÍTULO + FILTROS EN UNA SOLA LÍNEA -->
-    <div class="titulo-filtros">
-        <h2>Talleres</h2>
+    <!-- MENÚ SECUNDARIO -->
+    <nav class="main-menu">
+        <a href="index.html">
+            <img src="../resources/fenal-logo.png" alt="Logo FENAL">
+        </a>
+        <ul>
+            <li><a href="progGeneral.html">Programa general</a></li>
+            <li><a href="progEditorial.html">Programa editorial</a></li>
+            <li><a href="progArtistico.html">Programa artístico</a></li>
+            <li><a href="talleres.html">Talleres</a></li>
+            <li><a href="participantes.html">Participantes</a></li>
+            <li><a href="nosotros.html">Nosotros</a></li>
+        </ul>
+    </nav>
 
-        <div class="filtros">
-            <select id="categoriaFiltro">
-                <option value="">Todas las Categorías</option>
-                <option value="Arte">Arte</option>
-                <option value="Escritura">Escritura</option>
-                <option value="Infantil">Infantil</option>
-                <option value="Juvenil">Juvenil</option>
-                <option value="Creatividad">Creatividad</option>
-            </select>
+    <main>
+        <!-- TÍTULO + FILTROS -->
+        <div class="titulo-filtros">
+            <h2>Talleres</h2>
+            <div class="filtros">
+                <select id="categoriaFiltro">
+                    <option value="">Todas las Categorías</option>
+                </select>
 
-            <select id="fechaFiltro">
-                <option value="">Todas las Fechas</option>
-                <option value="dia1">Día 1</option>
-                <option value="dia2">Día 2</option>
-                <option value="dia3">Día 3</option>
-            </select>
-        </div>
-    </div>
-
-    <!-- GRID DE TALLERES -->
-    <div class="gridTalleres">
-
-        <div class="fichaTaller">
-            <img src="images/libro1.jpg" alt="Taller 1">
-            <h3>Taller de Ilustración</h3>
-            <p><strong>Imparte:</strong> Juan Pérez</p>
-            <p><strong>Sede:</strong> Salón 3</p>
-            <p class="sinopsis">Aprende técnicas básicas de ilustración en este taller introductorio…</p>
-            <p class="fecha">Domingo 17 – 10:00 hrs</p>
+                <select id="fechaFiltro">
+                    <option value="">Todas las Fechas</option>
+                </select>
+            </div>
         </div>
 
-        <div class="fichaTaller">
-            <img src="images/libro2.jpg" alt="Taller 2">
-            <h3>Taller de Escritura Creativa</h3>
-            <p><strong>Imparte:</strong> Ana Gómez</p>
-            <p><strong>Sede:</strong> Aula 1</p>
-            <p class="sinopsis">Desarrolla habilidades narrativas con ejercicios prácticos…</p>
-            <p class="fecha">Sábado 16 – 14:00 hrs</p>
+        <!-- GRID DE TALLERES -->
+        <div class="filaFichas" id="filaFichas">
+            <!-- Las fichas se generarán dinámicamente -->
         </div>
+    </main>
 
-    </div>
-</main>
+    <!-- FOOTER -->
     <div class="footer">
         <p>&copy; 2024 FENAL. Todos los derechos reservados.</p>
     </div>
 
+    <script src="../scripts/talleres.js"></script>
 </body>
 </html>

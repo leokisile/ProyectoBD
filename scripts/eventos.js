@@ -25,12 +25,14 @@ const tipoEventoModal = document.getElementById("tipoEventoSelectModal");
 
 const horariosContainer = document.getElementById("horariosContainer");
 const orgContainer = document.getElementById("orgSelect");
-const personasContainer = document.getElementById("personasContainer");
+const orgItems = document.getElementById("orgItems");
+const personasContainer = document.getElementById("personasEventoContainer");
 
 const subMusical = document.getElementById("subMusical");
 const subTaller = document.getElementById("subTaller");
 const subPremiacion = document.getElementById("subPremiacion");
 const subEditorial = document.getElementById("subEditorial");
+
 const inputSetlist = document.getElementById("setlist");
 const inputMateriales = document.getElementById("materiales");
 const inputRangoEdad = document.getElementById("rangoEdad");
@@ -46,8 +48,23 @@ let editandoId = null;
 // ===============================
 // INIT
 // ===============================
+document.addEventListener("DOMContentLoaded", async () => {
+    await cargarEventos();
+    await cargarSedes();
+    await cargarTiposEvento();
+    await cargarOrganizaciones();
+    await cargarPersonas();
+    await cargarRoles();
+    await cargarLibros();
+});
 
-// ======= TOAST =======
+searchInput.addEventListener("input", aplicarFiltros);
+filterSede.addEventListener("change", aplicarFiltros);
+filterTipo.addEventListener("change", aplicarFiltros);
+
+// ===============================
+// TOAST
+// ===============================
 function toast(msj, tipo = "success") {
     const t = document.createElement("div");
     t.className = "toast " + tipo;
@@ -71,17 +88,6 @@ function toast(msj, tipo = "success") {
     setTimeout(() => t.remove(), 3000);
 }
 
-document.addEventListener("DOMContentLoaded", async () => {
-    await cargarEventos();
-    await cargarSedes();
-    await cargarTiposEvento();
-    await cargarOrganizaciones();
-    await cargarPersonas();
-    await cargarRoles();  
-});
-    searchInput.addEventListener("input", aplicarFiltros);
-    filterSede.addEventListener("change", aplicarFiltros);
-    filterTipo.addEventListener("change", aplicarFiltros);
 // ===============================
 // CARGA DATOS
 // ===============================
@@ -132,18 +138,14 @@ async function cargarRoles() {
     listaRoles = await res.json();
 }
 
-async function cargarPersonasEvento(idEvento) {
-    const res = await fetch(`${API}/personaseventos/${idEvento}`);
-    const data = await res.json();
-
-    const cont = document.getElementById("personasEventoContainer");
-    cont.innerHTML = "";
-
-    data.forEach(p => {
-        agregarPersonaEvento(p.idPersona, p.idRol);
+async function cargarLibros() {
+    const res = await fetch(`${API}/libros`);
+    const libros = await res.json();
+    libroSelect.innerHTML = "<option value=''>Selecciona un libro</option>";
+    libros.forEach(l => {
+        libroSelect.innerHTML += `<option value="${l.idLibro}">${l.titulo}</option>`;
     });
 }
-
 
 // ===============================
 // TABLA
@@ -151,7 +153,7 @@ async function cargarPersonasEvento(idEvento) {
 function renderTabla(lista) {
     tablaBody.innerHTML = "";
     const txt = searchInput.value.toLowerCase();
-    const res = eventos.filter(e =>
+    const res = lista.filter(e =>
         e.titulo.toLowerCase().includes(txt) &&
         (!filterSede.value || e.idSede == filterSede.value) &&
         (!filterTipo.value || e.idTipoEvento == filterTipo.value)
@@ -214,8 +216,8 @@ function limpiarModal() {
     inputRangoEdad.value = "";
     inputPremio.value = "";
     libroSelect.value = "";
-    Array.from(orgContainer.options).forEach(o => o.selected = false);
-    document.querySelectorAll(".personaCheckbox").forEach(cb => cb.checked = false);
+    orgItems.innerHTML = "";
+    personasContainer.innerHTML = "";
     document.querySelectorAll(".subtipo").forEach(d => d.style.display = "none");
 }
 
@@ -225,11 +227,147 @@ function limpiarModal() {
 function mostrarSubcampos() {
     document.querySelectorAll(".subtipo").forEach(d => d.style.display = "none");
     const t = tipoEventoModal.options[tipoEventoModal.selectedIndex].text.toLowerCase();
-    if (t.includes("musical")) subMusical.style.display = "block";
-    if (t.includes("taller")) subTaller.style.display = "block";
-    if (t.includes("premiación")) subPremiacion.style.display = "block";
-    if (t.includes("editorial")) subEditorial.style.display = "block";
+    if(t.includes("musical")) subMusical.style.display = "block";
+    if(t.includes("taller")) subTaller.style.display = "block";
+    if(t.includes("premiación")) subPremiacion.style.display = "block";
+    if(t.includes("editorial")) subEditorial.style.display = "block";
 }
+
+// ===============================
+// SUBTIPOS
+// ===============================
+async function guardarSubtipo(idEvento) {
+    const tipo = tipoEventoModal.options[tipoEventoModal.selectedIndex].text.toLowerCase();
+
+    try {
+        if (tipo.includes("musical") && inputSetlist.value.trim()) {
+            const res = await fetch(`${API}/eventos/musical`, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ idMusical: idEvento, setlist: inputSetlist.value })
+            });
+            const r = await res.json();
+            if (res.ok) toast("Subtipo musical guardado: " + (r.mensaje || ""));
+            else toast("Error subtipo musical: " + (r.error || r.mensaje), "error");
+        }
+
+        if (tipo.includes("taller") && inputMateriales.value.trim() && inputRangoEdad.value.trim()) {
+            const res = await fetch(`${API}/eventos/taller`, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ idTaller: idEvento, materiales: inputMateriales.value, edades: inputRangoEdad.value })
+            });
+            const r = await res.json();
+            if (res.ok) toast("Subtipo taller guardado: " + (r.mensaje || ""));
+            else toast("Error subtipo taller: " + (r.error || r.mensaje), "error");
+        }
+
+        if (tipo.includes("premiación") && inputPremio.value.trim()) {
+            const res = await fetch(`${API}/eventos/premiacion`, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ idPrem: idEvento, premio: inputPremio.value })
+            });
+            const r = await res.json();
+            if (res.ok) toast("Subtipo premiación guardado: " + (r.mensaje || ""));
+            else toast("Error subtipo premiación: " + (r.error || r.mensaje), "error");
+        }
+
+        if (tipo.includes("editorial") && libroSelect.value) {
+            const res = await fetch(`${API}/eventos/presEditorial`, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ idPres: libroSelect.value, idEvento })
+            });
+            const r = await res.json();
+            if (res.ok) toast("Subtipo editorial guardado: " + (r.mensaje || ""));
+            else toast("Error subtipo editorial: " + (r.error || r.mensaje), "error");
+        }
+
+    } catch (e) {
+        console.error("Error guardarSubtipo:", e);
+        toast("Error al guardar subtipo: " + e.message, "error");
+    }
+}
+
+// ===============================
+// RELACIONES
+// ===============================
+async function guardarRelaciones(idEvento) {
+    try {
+        // Organizaciones
+        const orgs = Array.from(orgItems.children).map(d => d.dataset.id);
+        for (const idOrg of orgs) {
+            try {
+                const res = await fetch(`${API}/orgeventos`, {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ idEvento, idOrganizacion: idOrg })
+                });
+                const r = await res.json();
+                if (!res.ok) toast("Error relación org: " + (r.error || r.mensaje), "error");
+            } catch (err) {
+                console.error("Error POST org:", err);
+                toast("Error guardando organización: " + err.message, "error");
+            }
+        }
+
+        // Personas
+        const personas = Array.from(personasContainer.children);
+        for (const p of personasContainer.children) {
+            const idPersona = p.querySelector(".persona-select").value;
+            const idRol = p.querySelector(".rol-select").value;
+            const idRel = p.dataset.id || null; // si existe, actualizar
+            await fetch(`${API}/personaseventos${idRel ? "/" + idRel : ""}`, {
+                method: idRel ? "PUT" : "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ idEvento, idPersona, idRol })
+            });
+        }
+    } catch (e) {
+        console.error("Error guardarRelaciones:", e);
+        toast("Error al guardar relaciones: " + e.message, "error");
+    }
+}
+
+// ===============================
+// HORARIOS
+// ===============================
+async function guardarHorarios(idEvento) {
+    if (!idEvento) return;
+
+    try {
+        const items = document.querySelectorAll(".horario-item");
+        for (const item of items) {
+            let finicio = item.querySelector(".fechaInicio").value;
+            let ffin = item.querySelector(".fechaFin").value;
+
+            if (!finicio || !ffin) continue;
+
+            // Corregir formato para MySQL
+            finicio = finicio.replace("T", " ");
+            ffin = ffin.replace("T", " ");
+
+            try {
+                const res = await fetch(`${API}/horarios`, {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ idEvento, finicio, ffin })
+                });
+                const r = await res.json();
+                if (!res.ok) toast("Error guardando horario: " + (r.error || r.mensaje), "error");
+            } catch (err) {
+                console.error("Error POST horario:", err);
+                toast("Error guardando horario: " + err.message, "error");
+            }
+        }
+
+    } catch (e) {
+        console.error("Error guardarHorarios:", e);
+        toast("Error al guardar horarios: " + e.message, "error");
+    }
+}
+
 
 // ===============================
 // HORARIOS
@@ -237,8 +375,6 @@ function mostrarSubcampos() {
 function agregarHorario(fechaInicio = "", fechaFin = "") {
     const div = document.createElement("div");
     div.classList.add("horario-item");
-
-    // Cada bloque ocupa todo el ancho disponible y con margen
     div.style.display = "flex";
     div.style.flexDirection = "column";
     div.style.marginBottom = "10px";
@@ -261,78 +397,156 @@ function agregarHorario(fechaInicio = "", fechaFin = "") {
     horariosContainer.appendChild(div);
 }
 
+async function modificarSubtipo(idEvento) {
+    const tipo = tipoEventoModal.options[tipoEventoModal.selectedIndex].text.toLowerCase();
 
-
-
-
-function agregarOrg(idOrg = null, nombreOrg = null) {
-    const select = document.getElementById("orgSelect");
-    const orgItems = document.getElementById("orgItems");
-
-    // Si no se pasa idOrg, se toma del select
-    if (!idOrg) {
-        idOrg = select.value;
-        nombreOrg = select.options[select.selectedIndex]?.text;
-        if (!idOrg) { alert("Selecciona una organización"); return; }
+    if(tipo.includes("musical")) {
+        await fetch(`${API}/eventos/musical/${idEvento}`, {
+            method: "PUT",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ setlist: inputSetlist.value })
+        });
     }
 
-    // Evitar duplicados
-    if (orgItems.querySelector(`[data-id="${idOrg}"]`)) {
-        return; // Ya existe, no agregar
+    if(tipo.includes("taller")) {
+        await fetch(`${API}/eventos/taller/${idEvento}`, {
+            method: "PUT",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ materiales: inputMateriales.value, edades: inputRangoEdad.value })
+        });
     }
+
+    if(tipo.includes("premiación")) {
+        await fetch(`${API}/eventos/premiacion/${idEvento}`, {
+            method: "PUT",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ premio: inputPremio.value })
+        });
+    }
+
+    if(tipo.includes("editorial")) {
+        await fetch(`${API}/eventos/presEditorial/${idEvento}`, {
+            method: "PUT",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ idPres: libroSelect.value })
+        });
+    }
+}
+
+async function modificarRelaciones(idEvento) {
+    try {
+        // Organizaciones
+        const orgs = Array.from(orgItems.children);
+        for (const div of orgs) {
+            const idOrg = div.dataset.id;
+            const existe = div.dataset.relacionId || null; // id de la relación en BD si existe
+
+            try {
+                const res = await fetch(`${API}/orgeventos${existe ? "/" + existe : ""}`, {
+                    method: existe ? "PUT" : "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ idEvento, idOrganizacion: idOrg })
+                });
+                const r = await res.json();
+                if (!res.ok) toast("Error relación org: " + (r.error || r.mensaje), "error");
+                else if (!existe && r.idRelacion) div.dataset.relacionId = r.idRelacion; // asignar ID a elemento nuevo
+            } catch (err) {
+                console.error("Error guardando organización:", err);
+                toast("Error guardando organización: " + err.message, "error");
+            }
+        }
+
+        // Personas
+        const personas = Array.from(personasContainer.children);
+        for (const p of personas) {
+            const idPersona = p.querySelector(".persona-select").value;
+            const idRol = p.querySelector(".rol-select").value;
+            const existe = p.dataset.relacionId || null;
+
+            if (!idPersona || !idRol) continue;
+
+            try {
+                const res = await fetch(`${API}/personaseventos${existe ? "/" + existe : ""}`, {
+                    method: existe ? "PUT" : "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ idEvento, idPersona, idRol })
+                });
+                const r = await res.json();
+                if (!res.ok) toast("Error relación persona: " + (r.error || r.mensaje), "error");
+                else if (!existe && r.idRelacion) p.dataset.relacionId = r.idRelacion;
+            } catch (err) {
+                console.error("Error guardando persona-evento:", err);
+                toast("Error guardando persona-evento: " + err.message, "error");
+            }
+        }
+
+    } catch (e) {
+        console.error("Error general en modificarRelaciones:", e);
+        toast("Error al modificar relaciones: " + e.message, "error");
+    }
+}
+
+
+async function modificarHorarios(idEvento) {
+    try {
+        // Borrar horarios previos
+        await fetch(`${API}/horarios/${idEvento}`, { method: "DELETE" });
+        // Insertar nuevos horarios
+        await guardarHorarios(idEvento);
+
+    } catch (e) {
+        console.error("Error modificarHorarios:", e);
+        toast("Error al modificar horarios: " + e.message, "error");
+    }
+}
+
+// ===============================
+// ORGANIZACIONES
+// ===============================
+function agregarOrg() {
+    const select = orgContainer;
+    const idOrg = select.value;
+    const nombreOrg = select.options[select.selectedIndex]?.text;
+
+    if(!idOrg){ alert("Selecciona una organización"); return; }
+    if(orgItems.querySelector(`[data-id="${idOrg}"]`)) return;
 
     const div = document.createElement("div");
     div.classList.add("org-item");
     div.dataset.id = idOrg;
-
-    div.innerHTML = `
-        <span>${nombreOrg}</span>
-        <button type="button" onclick="this.parentElement.remove()">❌</button>
-    `;
-
+    div.innerHTML = `<span>${nombreOrg}</span>
+                     <button type="button" onclick="this.parentElement.remove()">❌</button>`;
     orgItems.appendChild(div);
-
-    // Si vino del select, resetear
-    if (!arguments.length) select.selectedIndex = 0;
 }
 
-
-
+// ===============================
+// PERSONAS
+// ===============================
 function agregarPersonaEvento(idPersona = "", idRol = "") {
     const div = document.createElement("div");
     div.classList.add("persona-evento-item");
-
     div.innerHTML = `
         <select class="persona-select">
             <option value="">Persona</option>
-            ${listaPersonas.map(p =>
-                `<option value="${p.idPersona}" ${p.idPersona == idPersona ? "selected" : ""}>
-                    ${p.nombre}
-                </option>`
-            ).join("")}
+            ${listaPersonas.map(p => `<option value="${p.idPersona}" ${p.idPersona==idPersona?"selected":""}>${p.nombre}</option>`).join("")}
         </select>
 
         <select class="rol-select">
             <option value="">Rol</option>
-            ${listaRoles.map(r =>
-                `<option value="${r.idRol}" ${r.idRol == idRol ? "selected" : ""}>
-                    ${r.rol}
-                </option>`
-            ).join("")}
+            ${listaRoles.map(r => `<option value="${r.idRol}" ${r.idRol==idRol?"selected":""}>${r.rol}</option>`).join("")}
         </select>
 
         <button type="button" onclick="this.parentElement.remove()">❌</button>
         <hr>
     `;
-
-    document.getElementById("personasEventoContainer").appendChild(div);
+    personasContainer.appendChild(div);
 }
 
 // ===============================
-// CRUD EVENTOS
+// CRUD EVENTOS (CREAR / MODIFICAR)
 // ===============================
 async function save() {
-    if(!validarFormulario()) return;
+    if (!validarFormulario()) return;
 
     const data = {
         titulo: inputTitulo.value,
@@ -348,109 +562,62 @@ async function save() {
 
     let idEvento;
 
-    if(editandoId){
-        await fetch(`${API}/eventos/${editandoId}`, {
-            method:"PUT",
-            headers:{"Content-Type":"application/json"},
-            body: JSON.stringify(data)
-        });
-        idEvento = editandoId;
-    } else {
-        const res = await fetch(`${API}/eventos`, {
-            method:"POST",
-            headers:{"Content-Type":"application/json"},
-            body: JSON.stringify(data)
-        });
-        const r = await res.json();
-        idEvento = r.idEvento; // asegúrate que el backend devuelva idEvento
-    }
+    try {
+        // CREAR o EDITAR evento principal
+        if (editandoId) {
+            const res = await fetch(`${API}/eventos/${editandoId}`, {
+                method: "PUT",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(data)
+            });
+            const r = await res.json();
+            if (res.ok) {
+                toast(r.mensaje || "Evento modificado correctamente");
+            } else {
+                console.error("Error al modificar:", r);
+                toast("Error al modificar: " + (r.error || r.mensaje), "error");
+                return;
+            }
+            idEvento = editandoId;
+            await modificarSubtipo(idEvento);
+            await modificarRelaciones(idEvento);
+            await modificarHorarios(idEvento);
+        } else {
+            const res = await fetch(`${API}/eventos`, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(data)
+            });
+            const r = await res.json();
+            if (res.ok) {
+                toast(r.mensaje || "Evento creado correctamente");
+            } else {
+                console.error("Error al crear:", r);
+                toast("Error al crear: " + (r.error || r.mensaje), "error");
+                return;
+            }
+            idEvento = r.idEvento;
 
-    await guardarSubtipo(idEvento);
-    await guardarRelaciones(idEvento);
-    await guardarHorarios(idEvento);
+            // Guardar subtipo (musical, taller, premiación, editorial)
+            await guardarSubtipo(idEvento);
 
-    closeModal();
-    cargarEventos();
-}
+            // Guardar relaciones (personas y organizaciones)
+            await guardarRelaciones(idEvento);
 
-// ===============================
-// SUBTIPOS CRUD
-// ===============================
-async function guardarSubtipo(idEvento){
-    const tipo = tipoEventoModal.options[tipoEventoModal.selectedIndex].text.toLowerCase();
-    if(tipo.includes("musical")){
-        await fetch(`${API}/eventos/musical/${editandoId||idEvento}`, {
-            method: editandoId?"PUT":"POST",
-            headers:{"Content-Type":"application/json"},
-            body: JSON.stringify({idMusical:idEvento,setlist:inputSetlist.value})
-        });
-    }
-    if(tipo.includes("taller")){
-        await fetch(`${API}/eventos/taller/${editandoId||idEvento}`, {
-            method: editandoId?"PUT":"POST",
-            headers:{"Content-Type":"application/json"},
-            body: JSON.stringify({idTaller:idEvento,materiales:inputMateriales.value,edades:inputRangoEdad.value})
-        });
-    }
-    if(tipo.includes("premiación")){
-        await fetch(`${API}/eventos/premiacion/${editandoId||idEvento}`, {
-            method: editandoId?"PUT":"POST",
-            headers:{"Content-Type":"application/json"},
-            body: JSON.stringify({idPrem:idEvento,premio:inputPremio.value})
-        });
-    }
-    if(tipo.includes("editorial")){
-        await fetch(`${API}/eventos/presEditorial`, {
-            method:"POST",
-            headers:{"Content-Type":"application/json"},
-            body: JSON.stringify({idPres:idEvento})
-        });
+            // Guardar horarios
+            await guardarHorarios(idEvento);
+        }
+
+        // Cerrar modal y recargar tabla
+        closeModal();
+        await cargarEventos();
+
+    } catch (e) {
+        console.error("Error general al guardar evento:", e);
+        toast("Error al guardar el evento: " + e.message, "error");
     }
 }
 
-// ===============================
-// RELACIONES
-// ===============================
-async function guardarRelaciones(idEvento){
-    // Organizaciones
-    const orgs = Array.from(orgContainer.selectedOptions).map(o => o.value);
-    for(const o of orgs){
-        await fetch(`${API}/eventos/organizaciones`, {
-            method:"POST",
-            headers:{"Content-Type":"application/json"},
-            body: JSON.stringify({idEvento,idOrganizacion:o})
-        });
-    }
-
-    // Personas
-    const personas = Array.from(document.querySelectorAll(".personaCheckbox"))
-        .filter(cb=>cb.checked).map(cb=>cb.value);
-    for(const p of personas){
-        await fetch(`${API}/personaseventos`, {
-            method:"POST",
-            headers:{"Content-Type":"application/json"},
-            body: JSON.stringify({idEvento,idPersona:p,idRol:1}) // rol fijo o modificar según UI
-        });
-    }
-}
-
-// ===============================
-// HORARIOS CRUD
-// ===============================
-async function guardarHorarios(idEvento){
-    // Borrar antiguos
-    await fetch(`${API}/eventos/horarios/${idEvento}`,{method:"DELETE"});
-
-    const fechas = document.querySelectorAll(".fecha");
-    const horas = document.querySelectorAll(".hora");
-    for(let i=0;i<fechas.length;i++){
-        await fetch(`${API}/horarios`,{
-            method:"POST",
-            headers:{"Content-Type":"application/json"},
-            body: JSON.stringify({idEvento,finicio:fechas[i].value,ffin:horas[i].value})
-        });
-    }
-}
 
 // ===============================
 // EDITAR
@@ -475,99 +642,50 @@ async function editar(id){
 
     mostrarSubcampos();
 
-    await cargarSubtipoEditar(id);
-    await cargarRelacionesEditar(id);
-    await cargarHorariosEditar(id);
+    // Subtipos
+    if(e.esMusical){ subMusical.style.display="block"; inputSetlist.value=e.setlist||""; }
+    if(e.esTaller){ subTaller.style.display="block"; inputMateriales.value=e.materiales||""; inputRangoEdad.value=e.rangoEdad||""; }
+    if(e.esPremiacion){ subPremiacion.style.display="block"; inputPremio.value=e.premio||""; }
+    if(e.esPresEditorial){ subEditorial.style.display="block"; libroSelect.value=e.idLibro||""; }
+
+    // Relaciones
+    const personasRes = await fetch(`${API}/personaseventos/${id}`);
+    const personas = await personasRes.json();
+    personas.forEach(p => agregarPersonaEvento(p.idPersona,p.idRol));
+
+    const orgRes = await fetch(`${API}/orgeventos/${id}`);
+    const orgs = await orgRes.json();
+    orgs.forEach(o => {
+        const div = document.createElement("div");
+        div.classList.add("org-item");
+        div.dataset.id = o.idOrganizacion;
+        div.innerHTML = `<span>${o.nombre}</span><button type="button" onclick="this.parentElement.remove()">❌</button>`;
+        orgItems.appendChild(div);
+    });
+
+    // Horarios
+    const horariosRes = await fetch(`${API}/horarios/${id}`);
+    const horarios = await horariosRes.json();
+    horariosContainer.innerHTML="";
+    horarios.forEach(h => agregarHorario(h.fechaInicio,h.fechaFin));
 
     modal.style.display="flex";
 }
 
 // ===============================
-// CARGA SUBTIPOS, RELACIONES, HORARIOS
-// ===============================
-async function cargarSubtipoEditar(idEvento){
-    const res = await fetch(`${API}/eventos/${idEvento}`);
-    const data = await res.json();
-
-    if(data.esMusical){
-        subMusical.style.display="block";
-        inputSetlist.value=data.setlist||"";
-    }
-    if(data.esTaller){
-        subTaller.style.display="block";
-        inputMateriales.value=data.materiales||"";
-        inputRangoEdad.value=data.edades||"";
-    }
-    if(data.esPremiacion){
-        subPremiacion.style.display="block";
-        inputPremio.value=data.premio||"";
-    }
-    if(data.esPresEditorial){
-        subEditorial.style.display="block";
-        libroSelect.value=data.idLibro||"";
-    }
-}
-
-async function cargarRelacionesEditar(idEvento){
-    // Personas + roles
-    const res = await fetch(`${API}/personaseventos/${idEvento}`);
-    const personas = await res.json();
-    const personasCont = document.getElementById("personasEventoContainer");
-    personasCont.innerHTML = "";
-    personas.forEach(p => agregarPersonaEvento(p.idPersona, p.idRol));
-
-    // Organizaciones
-    const resOrg = await fetch(`${API}/orgeventos/${idEvento}`);
-    const orgs = await resOrg.json();
-    orgs.forEach(o => agregarOrg(o.idOrganizacion, o.nombre)); // Pasar datos directamente
-}
-
-
-
-async function cargarPersonasEvento(idEvento) {
-    const res = await fetch(`${API}/personaseventos/${idEvento}`);
-    const data = await res.json();
-
-    const cont = document.getElementById("personasEventoContainer");
-    cont.innerHTML = "";
-
-    data.forEach(p => {
-        agregarPersonaEvento(p.idPersona, p.idRol);
-    });
-}
-
-async function cargarHorariosEditar(idEvento){
-    const res = await fetch(`${API}/horarios/${idEvento}`);
-    let horarios = await res.json();
-
-    // Asegurarnos de que sea un arreglo
-    if (!Array.isArray(horarios)) {
-        horarios = [horarios];
-    }
-
-    horariosContainer.innerHTML = "";
-
-    horarios.forEach(h => {
-        agregarHorario(h.fechaInicio, h.fechaFin);
-    });
-}
-
-
-
-// ===============================
 // ELIMINAR
 // ===============================
-async function eliminar(id) {
-    if (!confirm("¿Seguro que deseas eliminar este evento?")) return;
+async function eliminar(id){
+    if(!confirm("¿Seguro que deseas eliminar este evento?")) return;
 
-    try {
+    try{
         const res = await fetch(`${API}/eventos/${id}`,{method:"DELETE"});
-
         const msg = await res.json();
         toast(msg.mensaje);
         cargarEventos();
-    } catch (e) {
-        toast("Error al eliminar", "error");
+    } catch(e){
+        console.error(e);
+        toast("Error al eliminar","error");
     }
 }
 
@@ -579,8 +697,10 @@ function validarFormulario(){
     if(!tipoEventoModal.value){ alert("Selecciona un tipo de evento"); return false; }
 
     const tipo = tipoEventoModal.options[tipoEventoModal.selectedIndex].text.toLowerCase();
-    if(tipo.includes("musical") && !inputSetlist.value.trim()){
-        alert("Ingresa un setlist para evento musical"); return false;
-    }
+    if(tipo.includes("musical") && !inputSetlist.value.trim()){ alert("El setlist es obligatorio"); return false; }
+    if(tipo.includes("taller") && (!inputMateriales.value.trim() || !inputRangoEdad.value.trim())){ alert("Materiales y rango de edad son obligatorios"); return false; }
+    if(tipo.includes("premiación") && !inputPremio.value.trim()){ alert("El premio es obligatorio"); return false; }
+    if(tipo.includes("editorial") && !libroSelect.value){ alert("Selecciona un libro"); return false; }
+
     return true;
 }

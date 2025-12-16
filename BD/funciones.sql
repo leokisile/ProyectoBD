@@ -1168,7 +1168,7 @@ modi: BEGIN
         participaPublico = xparticipaPublico,
         descripcion = xdescripcion,
         infoAd = xinfoAd,
-        imagen = ximg.
+        imagen = ximg,
         idSede = xidSede,
         idTipoEvento = xidTipoEvento
     WHERE idEvento = xidEvento;

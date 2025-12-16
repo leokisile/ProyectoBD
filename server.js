@@ -50,6 +50,9 @@ db.then(() => {
     const librosRoutes = require("./routes/librosRoutes.js");
     app.use("/api/libros", librosRoutes);
 
+    const librospresRoutes = require("./routes/librospresRoutes.js");
+    app.use("/api/librospres", librospresRoutes);
+
     const consultas = require("./routes/consultasRoutes.js");
     app.use("/api/consultas", consultas);
 

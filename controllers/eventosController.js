@@ -61,18 +61,25 @@ exports.crear = async (req, res) => {
             descripcion, infoAd, imagen, idSede, idTipoEvento
         } = req.body;
 
-        const [result] = await connection.query(
-            `CALL crearEvento(?,?,?,?,?,?,?,?,?, @msg); SELECT @msg;`,
+        // Ejecutar el SP
+        await connection.query(
+            `CALL crearEvento(?,?,?,?,?,?,?,?,?, @msg);`,
             [
-                titulo, sinopsis, reqRegistro, participaPublico,
+                titulo, sinopsis, reqRegistro ? 1 : 0, participaPublico ? 1 : 0,
                 descripcion, infoAd, imagen, idSede, idTipoEvento
             ]
         );
 
-        const mensaje = result[1][0]['@msg'];
-        res.json({ mensaje });
+        // Obtener el mensaje del SP
+        const [[msgResult]] = await connection.query("SELECT @msg AS mensaje");
+
+        // Obtener el ID recién creado (si tu SP hace INSERT)
+        const [[lastId]] = await connection.query("SELECT LAST_INSERT_ID() AS idEvento");
+
+        res.json({ mensaje: msgResult.mensaje, idEvento: lastId.idEvento });
 
     } catch (err) {
+        console.error("Error en crear evento:", err); // log detallado
         res.status(500).json({ error: err.message });
     }
 };
@@ -162,18 +169,25 @@ exports.modificar = async (req, res) => {
             descripcion, infoAd, imagen, idSede, idTipoEvento
         } = req.body;
 
-        const [result] = await connection.query(
-            `CALL modificarEvento(?,?,?,?,?,?,?,?,?,?, @msg); SELECT @msg;`,
-            [
-                idEvento, titulo, sinopsis, reqRegistro, participaPublico,
-                descripcion, infoAd, imagen, idSede, idTipoEvento
-            ]
+        // Convierte booleans a 0/1
+        const registro = reqRegistro ? 1 : 0;
+        const publico = participaPublico ? 1 : 0;
+
+        // Llamar al stored procedure
+        await connection.query(
+            `CALL modificarEvento(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, @msg);`,
+            [idEvento, titulo, sinopsis, registro, publico, descripcion, infoAd, imagen, idSede, idTipoEvento]
         );
 
-        const mensaje = result[1][0]['@msg'];
-        res.json({ mensaje });
+        // Leer variable de salida
+        const [[resultado]] = await connection.query("SELECT @msg AS mensaje");
+
+        console.log(`Evento ${idEvento} modificado:`, resultado.mensaje);
+
+        res.json({ mensaje: resultado.mensaje });
 
     } catch (err) {
+        console.error("Error en modificar evento:", err);
         res.status(500).json({ error: err.message });
     }
 };

@@ -359,22 +359,31 @@ textarea {
 }
 
 /* Botón eliminar horario */
-.btn-del-horario {
-    background: #e74c3c;
-    border: none;
-    color: white;
-    padding: 6px 12px;
-    border-radius: 6px;
-    cursor: pointer;
-    font-size: 16px;
+
+.horario-bloque {
+    margin-bottom: 8px;
 }
 
-.btn-del-horario:hover {
-    background: #c0392b;
+.horario-bloque input {
+    margin-right: 5px;
+}
+
+.horario-separador {
+    border-top: 1px dashed #aaa;
+    margin: 8px 0;
+}
+
+.btn-delete-horario {
+    background: #e74c3c;
+    color: white;
+    border: none;
+    padding: 4px 8px;
+    cursor: pointer;
+    border-radius: 4px;
 }
 
 /* Botón agregar horario */
-.btn-add-horario {
+.btn-add {
     background: #4CAF50;
     border: none;
     color: white;
@@ -385,6 +394,6 @@ textarea {
     font-size: 15px;
 }
 
-.btn-add-horario:hover {
+.btn-add:hover {
     background: #3d8f41;
 }

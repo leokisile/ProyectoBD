@@ -38,6 +38,9 @@ db.then(() => {
     const eventosRoutes = require("./routes/eventosRoutes.js");
     app.use("/api/eventos", eventosRoutes);
 
+    const orgeventosRoutes = require("./routes/orgeventoRoutes.js");
+    app.use("/api/orgeventos", orgeventosRoutes);
+
     const horariosRoutes = require("./routes/horariosRoutes.js");
     app.use("/api/horarios", horariosRoutes);
 

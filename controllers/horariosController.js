@@ -13,7 +13,7 @@ exports.obtenerUno = async (req, res) => {
             [id]
         );
 
-        res.json(rows[0] || {});
+        res.json(rows);
     } catch (err) {
         res.status(500).json({ error: err.message });
     }
@@ -30,9 +30,9 @@ exports.obtenerTodos = async (req, res) => {
             "SELECT * FROM eventoHorario"
         );
 
-        res.json(rows[0] || {});
+        res.json(rows);
     } catch (err) {
-        res.status(500).json({ error: err.message });
+        res.status(500).json({ error:err.message});
     }
 };
 

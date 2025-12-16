@@ -137,17 +137,39 @@
         </div>
 
         <!-- ORGANIZACIONES -->
-        <h3>Organizaciones Participantes</h3>
-        <select id="orgSelect">
-            <option value="" disabled selected>Selecciona una organización</option>
-        </select>
+        <div id="orgContainer">
+            <h3>Organizaciones Participantes</h3>
+
+            <select id="orgSelect">
+                <option value="" disabled selected>Selecciona una organización</option>
+            </select>
+            <button type="button" class="btn-add" onclick="agregarOrg()">
+                ➕ Agregar organización
+            </button>
+
+            <div id="orgItems"></div> <!-- Contenedor de items agregados -->
+        </div>
+
+
+
+                <!-- PERSONAS -->
+        <fieldset>
+            <legend>Personas participantes</legend>
+
+            <div id="personasEventoContainer"></div>
+
+            <button type="button" class="btn-add" onclick="agregarPersonaEvento()">
+                ➕ Agregar persona
+            </button>
+        </fieldset>
+
 
         <!-- HORARIOS -->
         <h3>Horarios</h3>
 
         <div id="horariosContainer" class="horarios-list"></div>
 
-        <button type="button" class="btn-add-horario" onclick="agregarHorario()">
+        <button type="button" class="btn-add" onclick="agregarHorario()">
          ➕ Agregar horario
         </button>
 

@@ -38,6 +38,9 @@ const inputPremio = document.getElementById("premio");
 const libroSelect = document.getElementById("libroSelect");
 
 let eventos = [];
+let listaPersonas = [];
+let listaRoles = [];
+let listaOrganizaciones = [];
 let editandoId = null;
 
 // ===============================
@@ -49,8 +52,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     await cargarTiposEvento();
     await cargarOrganizaciones();
     await cargarPersonas();
-
-    
+    await cargarRoles();  
 });
     searchInput.addEventListener("input", aplicarFiltros);
     filterSede.addEventListener("change", aplicarFiltros);
@@ -88,23 +90,35 @@ async function cargarTiposEvento() {
 
 async function cargarOrganizaciones() {
     const res = await fetch(`${API}/organizaciones`);
-    const orgs = await res.json();
+    listaOrganizaciones = await res.json();
     orgContainer.innerHTML = "";
-    orgs.forEach(o => {
+    listaOrganizaciones.forEach(o => {
         orgContainer.innerHTML += `<option value="${o.idOrganizacion}">${o.nombre}</option>`;
     });
 }
 
 async function cargarPersonas() {
     const res = await fetch(`${API}/personas`);
-    const personas = await res.json();
-    personasContainer.innerHTML = "";
-    personas.forEach(p => {
-        const div = document.createElement("div");
-        div.innerHTML = `<label><input type="checkbox" class="personaCheckbox" value="${p.idPersona}"> ${p.nombre}</label>`;
-        personasContainer.appendChild(div);
+    listaPersonas = await res.json();
+}
+
+async function cargarRoles() {
+    const res = await fetch(`${API}/roles`);
+    listaRoles = await res.json();
+}
+
+async function cargarPersonasEvento(idEvento) {
+    const res = await fetch(`${API}/personaseventos/${idEvento}`);
+    const data = await res.json();
+
+    const cont = document.getElementById("personasEventoContainer");
+    cont.innerHTML = "";
+
+    data.forEach(p => {
+        agregarPersonaEvento(p.idPersona, p.idRol);
     });
 }
+
 
 // ===============================
 // TABLA
@@ -195,14 +209,98 @@ function mostrarSubcampos() {
 // ===============================
 // HORARIOS
 // ===============================
-function agregarHorario(fecha = "", hora = "") {
+function agregarHorario(fechaInicio = "", fechaFin = "") {
     const div = document.createElement("div");
+    div.classList.add("horario-item");
+
+    // Cada bloque ocupa todo el ancho disponible y con margen
+    div.style.display = "flex";
+    div.style.flexDirection = "column";
+    div.style.marginBottom = "10px";
+    div.style.padding = "5px";
+    div.style.border = "1px solid #ccc";
+    div.style.borderRadius = "5px";
+
     div.innerHTML = `
-        <input type="date" class="fecha" value="${fecha}">
-        <input type="time" class="hora" value="${hora}">
+        <label>Fecha y hora inicio:
+            <input type="datetime-local" class="fechaInicio" value="${fechaInicio.slice(0,16)}">
+        </label>
+
+        <label>Fecha y hora fin:
+            <input type="datetime-local" class="fechaFin" value="${fechaFin.slice(0,16)}">
+        </label>
+
+        <button type="button" style="margin-top:5px;" onclick="this.parentElement.remove()">❌ Eliminar horario</button>
+    `;
+
+    horariosContainer.appendChild(div);
+}
+
+
+
+
+
+function agregarOrg(idOrg = null, nombreOrg = null) {
+    const select = document.getElementById("orgSelect");
+    const orgItems = document.getElementById("orgItems");
+
+    // Si no se pasa idOrg, se toma del select
+    if (!idOrg) {
+        idOrg = select.value;
+        nombreOrg = select.options[select.selectedIndex]?.text;
+        if (!idOrg) { alert("Selecciona una organización"); return; }
+    }
+
+    // Evitar duplicados
+    if (orgItems.querySelector(`[data-id="${idOrg}"]`)) {
+        return; // Ya existe, no agregar
+    }
+
+    const div = document.createElement("div");
+    div.classList.add("org-item");
+    div.dataset.id = idOrg;
+
+    div.innerHTML = `
+        <span>${nombreOrg}</span>
         <button type="button" onclick="this.parentElement.remove()">❌</button>
     `;
-    horariosContainer.appendChild(div);
+
+    orgItems.appendChild(div);
+
+    // Si vino del select, resetear
+    if (!arguments.length) select.selectedIndex = 0;
+}
+
+
+
+function agregarPersonaEvento(idPersona = "", idRol = "") {
+    const div = document.createElement("div");
+    div.classList.add("persona-evento-item");
+
+    div.innerHTML = `
+        <select class="persona-select">
+            <option value="">Persona</option>
+            ${listaPersonas.map(p =>
+                `<option value="${p.idPersona}" ${p.idPersona == idPersona ? "selected" : ""}>
+                    ${p.nombre}
+                </option>`
+            ).join("")}
+        </select>
+
+        <select class="rol-select">
+            <option value="">Rol</option>
+            ${listaRoles.map(r =>
+                `<option value="${r.idRol}" ${r.idRol == idRol ? "selected" : ""}>
+                    ${r.rol}
+                </option>`
+            ).join("")}
+        </select>
+
+        <button type="button" onclick="this.parentElement.remove()">❌</button>
+        <hr>
+    `;
+
+    document.getElementById("personasEventoContainer").appendChild(div);
 }
 
 // ===============================
@@ -303,7 +401,7 @@ async function guardarRelaciones(idEvento){
     const personas = Array.from(document.querySelectorAll(".personaCheckbox"))
         .filter(cb=>cb.checked).map(cb=>cb.value);
     for(const p of personas){
-        await fetch(`${API}/relPersonaEvento`, {
+        await fetch(`${API}/personaseventos`, {
             method:"POST",
             headers:{"Content-Type":"application/json"},
             body: JSON.stringify({idEvento,idPersona:p,idRol:1}) // rol fijo o modificar según UI
@@ -386,29 +484,50 @@ async function cargarSubtipoEditar(idEvento){
 }
 
 async function cargarRelacionesEditar(idEvento){
-    // Personas
-    const res = await fetch(`${API}/relPersonaEvento/evento/${idEvento}`);
+    // Personas + roles
+    const res = await fetch(`${API}/personaseventos/${idEvento}`);
     const personas = await res.json();
-    document.querySelectorAll(".personaCheckbox").forEach(cb=>{
-        cb.checked=personas.some(p=>p.idPersona==cb.value);
-    });
+    const personasCont = document.getElementById("personasEventoContainer");
+    personasCont.innerHTML = "";
+    personas.forEach(p => agregarPersonaEvento(p.idPersona, p.idRol));
 
     // Organizaciones
-    const resOrg = await fetch(`${API}/eventos/organizaciones/${idEvento}`);
+    const resOrg = await fetch(`${API}/orgeventos/${idEvento}`);
     const orgs = await resOrg.json();
-    Array.from(orgContainer.options).forEach(opt=>{
-        opt.selected=orgs.some(o=>o.idOrganizacion==opt.value);
+    orgs.forEach(o => agregarOrg(o.idOrganizacion, o.nombre)); // Pasar datos directamente
+}
+
+
+
+async function cargarPersonasEvento(idEvento) {
+    const res = await fetch(`${API}/personaseventos/${idEvento}`);
+    const data = await res.json();
+
+    const cont = document.getElementById("personasEventoContainer");
+    cont.innerHTML = "";
+
+    data.forEach(p => {
+        agregarPersonaEvento(p.idPersona, p.idRol);
     });
 }
 
 async function cargarHorariosEditar(idEvento){
-    const res = await fetch(`${API}/eventos/horarios/${idEvento}`);
-    const horarios = await res.json();
-    horariosContainer.innerHTML="";
-    horarios.forEach(h=>{
-        agregarHorario(h.finicio,h.ffin);
+    const res = await fetch(`${API}/horarios/${idEvento}`);
+    let horarios = await res.json();
+
+    // Asegurarnos de que sea un arreglo
+    if (!Array.isArray(horarios)) {
+        horarios = [horarios];
+    }
+
+    horariosContainer.innerHTML = "";
+
+    horarios.forEach(h => {
+        agregarHorario(h.fechaInicio, h.fechaFin);
     });
 }
+
+
 
 // ===============================
 // ELIMINAR

@@ -7,60 +7,66 @@
     <link rel="stylesheet" href="../css/participantes.css">
 </head>
 <body>
-    <div class="header" id="header">
-        <h1>FENAL</h1> <!--Aqui usan una imagen en vez de texto-->
-        <nav>
+<main>
+    <!-- HEADER -->
+    <header class="header">
+        <div class="header-content">
+            <h2>INSTITUTO CULTURAL DE LEÓN</h2>
+            </nav>
+        </div>
+    </header>
+
+
+        <!-- MENÚ SECUNDARIO -->
+        <nav class="main-menu">
+            <a href="index.html">
+                <img src="../resources/fenal-logo.png" alt="Logo FENAL">
+            </a>
+
             <ul>
-                <li><a href="index.html">Inicio</a></li>
-                <li><a href="progGeneral.html">Programa General</a></li>
-                <li><a href="progEditorial.html">Programa Editorial</a></li>
-                <li><a href="progArtistico.html">Programa Artistico</a></li>
+                <li><a href="progGeneral.html">Programa general</a></li>
+                <li><a href="progEditorial.html">Programa editorial</a></li>
+                <li><a href="progArtistico.html">Programa artístico</a></li>
                 <li><a href="talleres.html">Talleres</a></li>
                 <li><a href="participantes.html">Participantes</a></li>
                 <li><a href="nosotros.html">Nosotros</a></li>
             </ul>
         </nav>
-    </div>
-<main>
-    <div class="titulo" >
+
+
+    <div class="titulo">
         <h2>Participantes</h2>
     </div>
 
-    <div class="carruselPatrocinadores">
-        <div class="slide">
-            <img src="images/slide1.jpg" alt="Slide 1">
-        </div>
-        <div class="slide">
-            <img src="images/slide2.jpg" alt="Slide 2">
-        </div>
+    <!-- BARRA DE BÚSQUEDA -->
+    <div class="busqueda">
+        <input type="text" id="searchInput" class="searchInput" placeholder="Buscar participante por nombre...">
     </div>
 
-    <div class="filaFichas">
-        <div class="fichaParticipante">
-            <img src="images/libro1.jpg" alt="Libro 1">
-            <h3>Nombre</h3>
-            <p>Biografia breve</p>
-            <p>Otros campos por ver</p>
-        </div>
+    <div class="filaFichas" id="filaFichas">
+        <!-- Aquí se inyectarán las fichas de participantes desde JS -->
     </div>
 
     <!-- MODAL -->
     <div id="modal" class="modal">
         <div class="modal-content">
-            <h2 id="modalTitle">Nombre Participante Seleccionado</h2>
+            <span id="cerrarModal" style="cursor:pointer;float:right;font-size:24px;">&times;</span>
+            <h2 id="modalTitle">Nombre Participante</h2>
             <div class="detalleParticipante">
-                <img src="images/libro1.jpg" alt="Imagen Participante">
+                <img id="modalImg" src="images/libro1.jpg" alt="Imagen Participante">
                 <div class="infoParticipante">
                     <h3>Biografía</h3>
-                    <p>Aquí va una biografía detallada del participante, incluyendo información relevante sobre su carrera, logros y contribuciones al campo relacionado con el evento.</p>
-                    <h3>Redes Sociales</h3>
-                    <p>Enlaces a redes sociales del participante.</p>
+                    <p id="modalBio">Aquí va una biografía detallada del participante.</p>
                 </div>
             </div>
         </div>
     </div>
 </main>
-    <div class="footer">
-        <p>&copy; 2024 FENAL. Todos los derechos reservados.</p>
-    </div>
+
+<div class="footer">
+    <p>&copy; 2024 FENAL. Todos los derechos reservados.</p>
+</div>
+
+<script src="../scripts/participantes.js"></script>
+</body>
 </html>

@@ -20,38 +20,67 @@ main {
     flex: 1; /* ← esto empuja el footer hasta abajo */
 }
 
-/* === HEADER === */
+/* ============================
+   HEADER PRINCIPAL
+============================ */
 .header {
+    width: 100%;
+    background: #222;
+    padding: 15px 0;
+    color: #fff;
+}
+
+.header-content {
+    width: 90%;
+    max-width: 1400px;
+    margin: auto;
+    display: flex;
+    align-items: center;
+    justify-content: center; /* centrado como la referencia */
+}
+
+.header-content h2 {
+    font-size: 20px;
+    font-weight: normal;
+    letter-spacing: 1px;
+}
+
+/* ============================
+   MENÚ SECUNDARIO
+============================ */
+.main-menu {
+    width: 100%;
+    background: #fff;
+    padding: 15px 0;
+    display: flex;
     position: sticky;
     top: 0;
-    background: #222;
-    color: white;
-    padding: 10px 20px;
-    display: flex;
-    justify-content: space-between;
+    z-index: 99;
     align-items: center;
-    z-index: 100;
+    justify-content: center;
+    gap: 40px;
+    border-bottom: 1px solid #ddd;
 }
 
-.header h1 {
-    margin: 0;
+.main-menu img {
+    height: 75px;
+    width: auto;
 }
 
-.header nav ul {
+.main-menu ul {
     list-style: none;
     display: flex;
-    gap: 15px;
+    gap: 40px;
+    align-items: center;
 }
 
-.header nav a {
-    color: white;
+.main-menu ul li a {
+    color: #333;
     text-decoration: none;
+    font-size: 18px;
+    font-weight: bold;
 }
 
-.header nav a:hover,
-.header nav .activo {
-    color: #ffcc00;
-}
 
 
 /* === TÍTULO === */
@@ -83,6 +112,24 @@ main {
     object-fit: cover;
     display: block;
 }
+/* === BARRA DE BÚSQUEDA === */
+.searchInput {
+    display: block;           /* Para poder usar margin auto */
+    width: 60%;               /* Ocupa 60% del contenedor */
+    max-width: 500px;         /* Máximo ancho para pantallas grandes */
+    padding: 10px 15px;       /* Espaciado interno */
+    border: 1px solid #ccc;   /* Borde */
+    border-radius: 8px;       /* Bordes redondeados */
+    margin: 20px auto;        /* Centrado horizontal y espacio superior/inferior */
+    font-size: 16px;          /* Texto más legible */
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1); /* Sutil sombra */
+    transition: border 0.2s ease;
+}
+
+.searchInput:focus {
+    border-color: #007bff;    /* Cambio de color al enfocar */
+    outline: none;
+}
 
 /* === FICHAS PARTICIPANTES === */
 .filaFichas {
@@ -110,7 +157,7 @@ main {
 }
 
 .fichaParticipante img {
-    width: 100%;
+    width: 200px;
     height: 200px;
     object-fit: cover;
     border-radius: 8px;

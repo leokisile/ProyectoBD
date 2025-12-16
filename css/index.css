@@ -21,9 +21,6 @@ body {
     background: #222;
     padding: 15px 0;
     color: #fff;
-    position: sticky;
-    top: 0;
-    z-index: 100;
 }
 
 .header-content {
@@ -49,6 +46,9 @@ body {
     background: #fff;
     padding: 15px 0;
     display: flex;
+    position: sticky;
+    top: 0;
+    z-index: 99;
     align-items: center;
     justify-content: center;
     gap: 40px;

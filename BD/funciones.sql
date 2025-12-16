@@ -4,13 +4,14 @@
 DROP VIEW IF EXISTS programaGeneral;
 CREATE VIEW programaGeneral AS
 SELECT 
+	e.idEvento,
 	te.tipoEvento,
 	e.titulo,
 	GROUP_CONCAT(o.nombre SEPARATOR ', ') AS organizaciones,
-	DATE(fechaInicio),
-	time(fechaInicio),
-	DATE(fechaFin),
-	time(fechaFin) 
+	DATE(fechaInicio) AS fechaInicio,
+	time(fechaInicio) AS horaInicio,
+	DATE(fechaFin) AS fechaFin,
+	time(fechaFin) as horaFin 
 FROM eventos e
 	INNER JOIN tipoEventos te ON te.idTipoEvento = e.idTipoEvento
 	INNER JOIN eventoHorario eh ON eh.idEvento = e.idEvento
@@ -125,6 +126,7 @@ BEGIN
     IF xfechaInicio IS NULL THEN
 
         SELECT 
+			e.idEvento,
             e.titulo,
             GROUP_CONCAT(
                 CASE WHEN pe.idRol != 3 THEN p.nombre END
@@ -229,7 +231,11 @@ BEGIN
 		e.descripcion,
 		e.infoAd,
 		e.reqRegistro,
-		e.participaPublico
+		e.participaPublico,
+        m.idMusical IS NOT NULL AS esMusical,
+		ta.idTaller IS NOT NULL AS esTaller,
+        pr.idPremiacion IS NOT NULL AS esPremiacion,
+        pre.idPresEditorial IS NOT NULL AS esPresEditorial
 
 	FROM eventos e
 		INNER JOIN relPersonaEvento pe ON pe.idEvento = e.idEvento
@@ -237,6 +243,10 @@ BEGIN
 		INNER JOIN sedes s ON s.idSede = e.idSede
         INNER JOIN tipoEventos te ON te.idTipoEvento = e.idTipoEvento
 		INNER JOIN eventoHorario eh ON eh.idEvento = e.idEvento
+        LEFT JOIN eventoMusical m ON e.idEvento = m.idMusical
+		LEFT JOIN taller ta ON e.idEvento = ta.idTaller
+		LEFT JOIN premiacion pr ON e.idEvento = pr.idPremiacion
+		LEFT JOIN presEditorial pre ON e.idEvento = pre.idPresEditorial
 	WHERE e.idEvento = xidEvento
 	GROUP BY e.idEvento, s.nombre, e.descripcion, eh.fechaInicio, eh.fechaFin
 	ORDER BY fechaInicio, fechaFin;

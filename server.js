@@ -50,5 +50,8 @@ db.then(() => {
     const librosRoutes = require("./routes/librosRoutes.js");
     app.use("/api/libros", librosRoutes);
 
+    const consultas = require("./routes/consultasRoutes.js");
+    app.use("/api/consultas", consultas);
+
     app.listen(3000, () => console.log("🚀 Servidor funcionando en puerto 3000"));
 });

@@ -17,39 +17,65 @@ body {
 main {
     flex: 1; /* ← esto empuja el footer hasta abajo */
 }
-/* =========================
-   HEADER
-========================= */
+/* ============================
+   HEADER PRINCIPAL
+============================ */
 .header {
+    width: 100%;
+    background: #222;
+    padding: 15px 0;
+    color: #fff;
+}
+
+.header-content {
+    width: 90%;
+    max-width: 1400px;
+    margin: auto;
+    display: flex;
+    align-items: center;
+    justify-content: center; /* centrado como la referencia */
+}
+
+.header-content h2 {
+    font-size: 20px;
+    font-weight: normal;
+    letter-spacing: 1px;
+}
+
+/* ============================
+   MENÚ SECUNDARIO
+============================ */
+.main-menu {
+    width: 100%;
+    background: #fff;
+    padding: 15px 0;
+    display: flex;
     position: sticky;
     top: 0;
-    background: #222;
-    color: white;
-    padding: 10px 20px;
-    display: flex;
-    justify-content: space-between;
+    z-index: 99;
     align-items: center;
-    z-index: 100;
+    justify-content: center;
+    gap: 40px;
+    border-bottom: 1px solid #ddd;
 }
 
-.header h1 {
-    margin: 0;
+.main-menu img {
+    height: 75px;
+    width: auto;
 }
 
-.header nav ul {
+.main-menu ul {
     list-style: none;
     display: flex;
-    gap: 15px;
+    gap: 40px;
+    align-items: center;
 }
 
-.header nav a {
-    color: white;
+.main-menu ul li a {
+    color: #333;
     text-decoration: none;
-}
-
-.header nav a:hover,
-.header nav .activo {
-    color: #ffcc00;
+    font-size: 18px;
+    font-weight: bold;
 }
 
 /* =========================

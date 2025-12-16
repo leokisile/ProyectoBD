@@ -101,7 +101,7 @@ CALL eliminarPersona(10, @msg); SELECT @msg;
 CALL eliminarRed(3, @msg); SELECT @msg;
 CALL eliminarRedPersona(5, 2, @msg); SELECT @msg;
 CALL eliminarTipoEvento(4, @msg); SELECT @msg;
-CALL eliminarEvento(12, @msg); SELECT @msg;
+CALL eliminarEvento(1, @msg); SELECT @msg;
 CALL eliminarRelEventoOrg(2, 8, @msg); SELECT @msg;
 CALL eliminarHorarioEvento(7, @msg); SELECT @msg;
 CALL eliminarRol(6, @msg); SELECT @msg;

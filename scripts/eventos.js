@@ -46,6 +46,31 @@ let editandoId = null;
 // ===============================
 // INIT
 // ===============================
+
+// ======= TOAST =======
+function toast(msj, tipo = "success") {
+    const t = document.createElement("div");
+    t.className = "toast " + tipo;
+    t.textContent = msj;
+    Object.assign(t.style, {
+        position: "fixed",
+        top: "20px",
+        right: "20px",
+        padding: "10px 15px",
+        background: tipo === "success" ? "#4CAF50" : "#e74c3c",
+        color: "white",
+        borderRadius: "8px",
+        boxShadow: "0 4px 10px rgba(0,0,0,0.2)",
+        zIndex: 9999,
+        opacity: 0,
+        transition: "opacity .3s"
+    });
+    document.body.appendChild(t);
+    setTimeout(() => t.style.opacity = 1, 10);
+    setTimeout(() => t.style.opacity = 0, 2500);
+    setTimeout(() => t.remove(), 3000);
+}
+
 document.addEventListener("DOMContentLoaded", async () => {
     await cargarEventos();
     await cargarSedes();
@@ -532,10 +557,18 @@ async function cargarHorariosEditar(idEvento){
 // ===============================
 // ELIMINAR
 // ===============================
-async function eliminar(id){
-    if(!confirm("¿Eliminar este evento?")) return;
-    await fetch(`${API}/eventos/${id}`,{method:"DELETE"});
-    cargarEventos();
+async function eliminar(id) {
+    if (!confirm("¿Seguro que deseas eliminar este evento?")) return;
+
+    try {
+        const res = await fetch(`${API}/eventos/${id}`,{method:"DELETE"});
+
+        const msg = await res.json();
+        toast(msg.mensaje);
+        cargarEventos();
+    } catch (e) {
+        toast("Error al eliminar", "error");
+    }
 }
 
 // ===============================

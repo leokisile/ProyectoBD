@@ -125,6 +125,7 @@ CREATE TABLE libros(
 CREATE TABLE presEditorial(
 	idPresEditorial int primary key,
     FOREIGN KEY (idPresEditorial) REFERENCES eventos(idEvento)
+    ON DELETE CASCADE ON UPDATE CASCADE
 );
 
 CREATE TABLE relLibroPres(
@@ -141,6 +142,7 @@ CREATE TABLE eventoMusical(
 	idMusical int primary key,
     setlist text not null,
     FOREIGN KEY (idMusical) REFERENCES eventos(idEvento)
+    ON DELETE CASCADE ON UPDATE CASCADE
 );
 
 CREATE TABLE taller(
@@ -148,10 +150,12 @@ CREATE TABLE taller(
     materiales text not null,
     rangoEdad varchar(10),
     FOREIGN KEY (idTaller) REFERENCES eventos(idEvento)
+    ON DELETE CASCADE ON UPDATE CASCADE
 );
 
 CREATE TABLE premiacion(
 	idPremiacion int primary key,
     premio varchar(60) not null,
     FOREIGN KEY (idPremiacion) REFERENCES eventos(idEvento)
+    ON DELETE CASCADE ON UPDATE CASCADE
 );

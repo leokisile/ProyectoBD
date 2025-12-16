@@ -246,13 +246,12 @@ exports.eliminar = async (req, res) => {
         const connection = await db;
         const { idEvento } = req.params;
 
-        const [result] = await connection.query(
-            `CALL eliminarEvento(?, @msg); SELECT @msg;`,
-            [idEvento]
-        );
+        await connection.query("CALL eliminarEvento(?, @mensaje)", [idEvento]);
 
-        const mensaje = result[1][0]['@msg'];
-        res.json({ mensaje });
+        const [[resultado]] =
+            await connection.query("SELECT @mensaje AS mensaje");
+
+        res.json({ mensaje: resultado.mensaje });
 
     } catch (err) {
         res.status(500).json({ error: err.message });
